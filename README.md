@@ -4,6 +4,9 @@ This software is to be used with the siglent spd series power suplies . it is no
 
 Fetures :
 •	display every parameter of the suply on the computer screen
+
 •	remote control of these parameters
+
 •	create more readable charts of voltage , current and power
+
 •	act as a dataloger and save all info on a .csv file for future analysis
