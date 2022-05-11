@@ -1,7 +1,7 @@
 ## Command Set for Siglent`s SPD3303X-E
 
 
-#Getters
+* Getters
 
 | Command | Expected return |Notes| DataType | Type |Unit
 |---|---|---|---|---|---|
@@ -14,7 +14,7 @@
 | `CHx:VOLTage?` |0.00 |Set value| Float | Getter |V|
 |`SYSTem:STATus?`|0xSOMETHING|see [SystemStatus.md](SystemStatus.md) for details  **THISISTHEDEVILHIMSELF**|HEX|Getter|N/D
 
-#Setters
+* Setters
 
 | Command | Expected return |Notes| DataType | Type |Unit
 |---|---|---|---|---|---|
