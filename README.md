@@ -24,4 +24,5 @@
 |`OUTPut CHx,{ON/OFF}`|n/a|Turn on/off the specified channel|-|Setter|N/D|
 |`OUTPut:TRACK {0/1/2}`|n/a|Sets the channel mode on Indie, Serial or Paralel|-|Setter|N/D|
 |`OUTPut:WAVE CHx,{ON/OFF}`|n/a| Turn on/off the Waveform Display function of specified channel.|-|Setter|N/D|
-
+|`*SAV {1/2/3/4/5}`|n/a|Save current state in nonvolatile memory|-|Setter|N/D|
+|`*RCL {1/2/3/4/5}`|n/a|Recall state that had been saved from nonvolatile memory.|-|Setter|N/D|
