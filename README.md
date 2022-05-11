@@ -12,7 +12,7 @@
 | `MEASure:POWEr? CHx` | 0.00 |ADC reading or instrument calc| Float | Getter |W|
 | `CHx:CURRent?` | 0.00 |Set value| Float | Getter |A|
 | `CHx:VOLTage?` |0.00 |Set value| Float | Getter |V|
-|`SYSTem:STATus?`|0xSOMETHING|see SystemStatus.md for details  **THISISTHEDEVILHIMSELF**|HEX|Getter|N/D
+|`SYSTem:STATus?`|0xSOMETHING|see [SystemStatus.md](SystemStatus.md) for details  **THISISTHEDEVILHIMSELF**|HEX|Getter|N/D
 
 #Setters
 
