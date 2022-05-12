@@ -15,6 +15,20 @@ namespace SPD3303X_E
         CH2,
         CH3
     }
+
+    public enum SWITCH {ON, OFF }
+
+    public enum CHANNEL_MODE { CV, CC}
+
+    public enum TIMERS { TIMER1, TIMER2 }
+
+    public enum DISPLAYS { DIGITAL, WAVEFORM}
+
+    public enum MEMORIES { M1=1, M2, M3, M4, M5}
+
+    public enum CONNECTION_MODE {SERIES, PARALLEL, INDEPENDENT, NONE}
+
+
     internal class SocketManagement
     {
         private IPAddress IP_ADDRESS = null;
@@ -39,46 +53,6 @@ namespace SPD3303X_E
                 SCPI.Close();
             }
         }
-        public async Task<string> getIDN()
-        {
-            string ret = await telnetCommand("*IDN?", true);
-            Console.WriteLine(ret);
-            return ret;
-        }
-        
-        public async Task<double> getVoltage(CHANNELS channel)
-        {
-            double value = Double.Parse(await telnetCommand(returnChannel(channel)+":VOLTage?", true));
-            Console.WriteLine(value);
-            return value;
-        }
-
-        public async Task<double> getCurrent(CHANNELS channel)
-        {
-            double value = Double.Parse(await telnetCommand(returnChannel(channel) + ":CURRent?", true));
-            Console.WriteLine(value);
-            return value;
-        }
-
-        public async Task<double> getPower(CHANNELS channel)
-        {
-            double value = Double.Parse(await telnetCommand("MEASure:POWEr? " + returnChannel(channel), true));
-
-            Console.WriteLine(value);
-            return value;
-        }
-
-        public async Task setCurrent(CHANNELS channel, double value)
-        {
-            await telnetCommand(returnChannel(channel) + ":CURRent " + value, false);
-        }
-
-        public async Task setVoltage(CHANNELS channel, double value)
-        {
-            await telnetCommand(returnChannel(channel) + ":VOLTage " + value, false);
-        }
-
-
 
         private async Task<string> telnetCommand(string cmd, bool wait)
         {
@@ -93,8 +67,29 @@ namespace SPD3303X_E
                 return response;
             }
             return "";
-           
+
         }
+
+        private async Task<bool[]> getSystemStatus()
+        {
+            bool[] status = new bool[9];
+            String receive = await telnetCommand("SYSTem: STATus?", true);
+            int statusCode = Convert.ToInt32(receive.Substring(2), 16); //omit 0x part
+            Debug.WriteLine("STATUS RESPONSE: " + Convert.ToString(statusCode, 2));
+            for (int i = 0; i < 9; i++)
+            {
+                if ( ( ( statusCode >> (i + 1) ) & 1) == 1)
+                {
+                    status[i] = true;
+                }
+                else
+                {
+                    status[i] = false;
+                }
+            }
+            return status;
+        }
+
 
         private string returnChannel(CHANNELS channel)
         {
@@ -110,5 +105,272 @@ namespace SPD3303X_E
                     return "";
             }
         }
+
+
+        private string returnSwitch(SWITCH switch1)
+        {
+            switch (switch1)
+            {
+                case SWITCH.ON:
+                    return "ON";
+                case SWITCH.OFF:
+                    return "OFF";
+                default: return "OFF";
+            }
+        }
+
+
+        private string returnConnectionMode(CONNECTION_MODE connection)
+        {
+            switch (connection)
+            {
+                case CONNECTION_MODE.INDEPENDENT:
+                    return "0";
+                case CONNECTION_MODE.SERIES:
+                    return "1";
+                case CONNECTION_MODE.PARALLEL:
+                    return "2";
+                default: return "";
+            }
+        }
+
+
+        private string returnMemory(MEMORIES memory)
+        {
+            switch (memory)
+            {
+                case MEMORIES.M1:
+                    return "1";
+
+                case MEMORIES.M2:
+                    return "2";
+
+                case MEMORIES.M3:
+                    return "3";
+
+                case MEMORIES.M4:
+                    return "4";
+
+                case MEMORIES.M5:
+                    return "5";
+
+                default: return "";
+            }
+        }
+
+        public async Task<string> getIDN()
+        {
+            string ret = await telnetCommand("*IDN?", true);
+            Console.WriteLine(ret);
+            return ret;
+        }
+        
+
+        public async Task<double> getVoltage(CHANNELS channel)
+        {
+            double value = Double.Parse(await telnetCommand(returnChannel(channel)+":VOLTage?", true));
+            Console.WriteLine(value);
+            return value;
+        }
+
+
+        public async Task<double> getCurrent(CHANNELS channel)
+        {
+            double value = Double.Parse(await telnetCommand(returnChannel(channel) + ":CURRent?", true));
+            Console.WriteLine(value);
+            return value;
+        }
+
+
+        public async Task<double> getPower(CHANNELS channel)
+        {
+            double value = Double.Parse(await telnetCommand("MEASure:POWEr? " + returnChannel(channel), true));
+
+            Console.WriteLine(value);
+            return value;
+        }
+
+
+
+
+        public async Task<CHANNEL_MODE> getChannelMode(CHANNELS channel)
+        {
+            bool[] status = await getSystemStatus();
+            switch (channel)
+            {
+                case CHANNELS.CH1:
+                    if (status[0]) { return CHANNEL_MODE.CC; }
+                    else { return CHANNEL_MODE.CV; }
+                
+                case CHANNELS.CH2:
+                    if (status[1]) { return CHANNEL_MODE.CC; }
+                    else { return CHANNEL_MODE.CV; }
+
+                default: return CHANNEL_MODE.CV; 
+            }
+        }
+
+
+        public async Task<SWITCH> getChannelStatus(CHANNELS channel)
+        {
+            bool[] status = await getSystemStatus();
+            switch (channel)
+            {
+                case CHANNELS.CH1:
+                    if (status[4]) { return SWITCH.ON; }
+                    else { return SWITCH.OFF; }
+
+                case CHANNELS.CH2:
+                    if (status[5]) { return SWITCH.ON; }
+                    else { return SWITCH.OFF; }
+
+
+                default: return SWITCH.ON;
+            }
+        }
+
+
+        public async Task<SWITCH> getTimerStatus(TIMERS timer)
+        {
+            bool[] status = await getSystemStatus();
+            switch (timer)
+            {
+                case TIMERS.TIMER1:
+                    if (status[6]) { return SWITCH.ON; }
+                    else { return SWITCH.OFF; }
+
+                case TIMERS.TIMER2:
+                    if (status[7]) { return SWITCH.ON; }
+                    else { return SWITCH.OFF; }
+
+
+                default: return SWITCH.ON;
+            }
+        }
+
+        public async Task<DISPLAYS> getDisplay(CHANNELS channel)
+        {
+            bool[] status = await getSystemStatus();
+            switch (channel)
+            {
+                case CHANNELS.CH1:
+                    if (status[8]) { return DISPLAYS.WAVEFORM; }
+                    else { return DISPLAYS.DIGITAL; }
+
+                case CHANNELS.CH2:
+                    if (status[9]) { return DISPLAYS.WAVEFORM; }
+                    else { return DISPLAYS.DIGITAL; }
+
+                default: return DISPLAYS.DIGITAL;
+            }
+        }
+
+        public async Task<CONNECTION_MODE> getConnectionMode()
+        {
+            bool[] status = await getSystemStatus();
+            if (status[2])
+            {
+                if (status[3])
+                {
+                    return CONNECTION_MODE.SERIES;
+                }
+                else { return CONNECTION_MODE.PARALLEL; }
+            }
+            else
+            {
+                if (status[3]) { return CONNECTION_MODE.INDEPENDENT; }
+                else { return CONNECTION_MODE.NONE; }
+            }
+        }
+
+        public async Task<string> getInstrumentDHCP()
+        {
+            string response = await telnetCommand("DHCP?", true);
+            return response;
+        }
+
+        public async Task<string> getInstrumentIP()
+        {
+            string response = await telnetCommand("IPaddr?", true);
+            return response;
+        }
+
+        public async Task<string> getInstrumentMask()
+        {
+            string response = await telnetCommand("MASKaddr?", true);
+            return response;
+        }
+
+        public async Task<string> getInstrumentGateway()
+        {
+            string response = await telnetCommand("GATEaddr?", true);
+            return response;
+        }
+
+        public async Task setCurrent(CHANNELS channel, double value)
+        {
+            await telnetCommand(returnChannel(channel) + ":CURRent " + value, false);
+        }
+
+
+        public async Task setVoltage(CHANNELS channel, double value)
+        {
+            await telnetCommand(returnChannel(channel) + ":VOLTage " + value, false);
+        }
+
+
+        public async Task setChannelStatus(CHANNELS channel, SWITCH status)
+        {
+            await telnetCommand("OUTPut "+returnChannel(channel)+","+returnSwitch(status), false);
+        }
+
+
+        public async Task setChannelConnection(CONNECTION_MODE mode)
+        {
+            await telnetCommand("OUTPut:TRACK " + returnConnectionMode(mode), false);
+        }
+
+
+        public async Task setWaveformDisplay(CHANNELS channel, SWITCH sWITCH)
+        {
+            await telnetCommand("OUTPut:WAVE "+returnChannel(channel)+","+returnSwitch(sWITCH), false);
+        }
+
+
+        public async Task setInstrumentDHCP(SWITCH dhcp)
+        {
+            await telnetCommand("DHCP " + returnSwitch(dhcp), false);
+        }
+
+
+        public async Task setInstrumentIP(string IP)
+        {
+            await telnetCommand("IPaddr "+IP, false);
+        }
+
+
+        public async Task setInstrumentMask(string address)
+        {
+            await telnetCommand("MASKaddr "+address, false);
+        }
+
+
+        public async Task setInstrumentGateway(string gateway)
+        {
+            await telnetCommand("GATEaddr " + gateway, false);
+        }
+
+
+        public async Task saveCurrentState(MEMORIES memory)
+        {
+            await telnetCommand("*SAV " + returnMemory(memory), false);
+        }
+
+
+        public async Task recallState(MEMORIES memory)
+        {
+            await telnetCommand("*RCL " + returnMemory(memory), false);
+        }
+
     }
 }
