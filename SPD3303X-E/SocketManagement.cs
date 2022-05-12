@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Diagnostics;
 
 namespace SPD3303X_E
@@ -74,11 +75,14 @@ namespace SPD3303X_E
         {
             bool[] status = new bool[9];
             String receive = await telnetCommand("SYSTem: STATus?", true);
-            int statusCode = Convert.ToInt32(receive.Substring(2), 16); //omit 0x part
+            Regex regex = new Regex(@"(?<=0x)[A-Fa-f0-9]+"); //regex for hexadecimal, to discard all following invalid characters, without 0x prefix (positive lookbehind)
+            string value = regex.Match(receive).Value;
+            Debug.WriteLine("STATUS VALUE: " + value);
+            int statusCode = Convert.ToInt32(value, 16); 
             Debug.WriteLine("STATUS RESPONSE: " + Convert.ToString(statusCode, 2));
             for (int i = 0; i < 9; i++)
             {
-                if ( ( ( statusCode >> (i + 1) ) & 1) == 1)
+                if ( ( ( statusCode >> i ) & 1) == 1)
                 {
                     status[i] = true;
                 }
