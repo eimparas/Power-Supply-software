@@ -11,8 +11,8 @@ follow
 |---|---|
 | 0 | 0: CH1 CV mode; 1:CC Mode |
 | 1 | 0: CH2 CV mode; 1: CH2 CC mode |  
-|2,3  |  01: Independent mode; 10: Parallel mode |
-|4|11: Series mode 4 0: CH1 OFF 1: CH1 ON|
+|2,3  |  01: Independent mode; 10: Parallel mode 11:Series Mode (fromMemory)|
+|4|0: CH1 OFF 1: CH1 ON|
 |5|0: CH2 OFF 1: CH2 ON|
 |6|0: TIMER1 OFF 1: TIMER1 ON|
 |7|0: TIMER2 OFF 1: TIMER2 ON|
