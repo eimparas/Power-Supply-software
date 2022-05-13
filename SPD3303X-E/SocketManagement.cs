@@ -17,17 +17,17 @@ namespace SPD3303X_E
         CH3
     }
 
-    public enum SWITCH {ON, OFF }
+    public enum SWITCH { ON, OFF }
 
-    public enum CHANNEL_MODE { CV, CC}
+    public enum CHANNEL_MODE { CV, CC }
 
     public enum TIMERS { TIMER1, TIMER2 }
 
-    public enum DISPLAYS { DIGITAL, WAVEFORM}
+    public enum DISPLAYS { DIGITAL, WAVEFORM }
 
-    public enum MEMORIES { M1=1, M2, M3, M4, M5}
+    public enum MEMORIES { M1 = 1, M2, M3, M4, M5 }
 
-    public enum CONNECTION_MODE {SERIES, PARALLEL, INDEPENDENT, NONE}
+    public enum CONNECTION_MODE { SERIES, PARALLEL, INDEPENDENT, NONE }
 
 
     internal class SocketManagement
@@ -41,20 +41,31 @@ namespace SPD3303X_E
         {
             this.IP_ADDRESS = IPAddress.Parse(IP_ADDRESS);
             this.IP_PORT = PORT;
-            endPoint= new IPEndPoint(this.IP_ADDRESS, IP_PORT);
+            endPoint = new IPEndPoint(this.IP_ADDRESS, IP_PORT);
         }
 
-        public void connect() {
+        ///<summary>
+        /// Connection initialzation 
+        ///</summary>
+        public void connect()
+        {
             Debug.WriteLine(endPoint);
             SCPI = new Socket(IP_ADDRESS.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             SCPI.Connect(endPoint);//connect to socket 
         }
-        public void disconnect() {
-            if (SCPI != null) {
+        ///<summary>
+        /// Socket termination
+        ///</summary>
+        public void disconnect()
+        {
+            if (SCPI != null)
+            {
                 SCPI.Close();
+                SCPI.Dispose();
             }
         }
-
+       
+        //Private Function for Coms 
         private async Task<string> telnetCommand(string cmd, bool wait)
         {
             byte[] command = Encoding.ASCII.GetBytes(cmd);
@@ -70,19 +81,23 @@ namespace SPD3303X_E
             return "";
 
         }
-
+        
+        //"System Status " command parser
         private async Task<bool[]> getSystemStatus()
         {
-            bool[] status = new bool[9];
-            String receive = await telnetCommand("SYSTem: STATus?", true);
+            bool[] status = new bool[10];
+            String receive = await telnetCommand("SYSTem:STATus?", true);
             Regex regex = new Regex(@"(?<=0x)[A-Fa-f0-9]+"); //regex for hexadecimal, to discard all following invalid characters, without 0x prefix (positive lookbehind)
-            string value = regex.Match(receive).Value;
+            string value = regex.Match(receive).Value;  //telnet bullshit, rejects 0 in the end.
+            if(value.Length < 2) { value = value + "0"; };
             Debug.WriteLine("STATUS VALUE: " + value);
-            int statusCode = Convert.ToInt32(value, 16); 
+            int statusCode = Convert.ToInt32(value, 16);
             Debug.WriteLine("STATUS RESPONSE: " + Convert.ToString(statusCode, 2));
-            for (int i = 0; i < 9; i++)
+            int mask = 512;
+            for (int i = 9; i >= 0; i--)
             {
-                if ( ( ( statusCode >> i ) & 1) == 1)
+                Debug.WriteLine(statusCode & mask);
+                if (((statusCode >> (9 -i) ) & 1) == 1)
                 {
                     status[i] = true;
                 }
@@ -91,6 +106,7 @@ namespace SPD3303X_E
                     status[i] = false;
                 }
             }
+
             return status;
         }
 
@@ -161,42 +177,47 @@ namespace SPD3303X_E
                 default: return "";
             }
         }
-
+        ///<summary>
+        /// Instrument Ididefication 
+        ///</summary>
         public async Task<string> getIDN()
         {
-            string ret = await telnetCommand("*IDN?", true);
-            Console.WriteLine(ret);
+            string ret = await telnetCommand("*IDN?", true);           
             return ret;
         }
-        
 
+        ///<summary>
+        /// Gets the Voltage SetPoint
+        ///</summary>
         public async Task<double> getVoltage(CHANNELS channel)
         {
-            double value = Double.Parse(await telnetCommand(returnChannel(channel)+":VOLTage?", true));
-            Console.WriteLine(value);
+            double value = Double.Parse(await telnetCommand(returnChannel(channel) + ":VOLTage?", true));           
             return value;
         }
 
-
+        ///<summary>
+        /// Gets the Current SetPoint
+        ///</summary>
         public async Task<double> getCurrent(CHANNELS channel)
         {
-            double value = Double.Parse(await telnetCommand(returnChannel(channel) + ":CURRent?", true));
-            Console.WriteLine(value);
+            double value = Double.Parse(await telnetCommand(returnChannel(channel) + ":CURRent?", true));            
             return value;
         }
 
-
+        ///<summary>
+        /// Gets the Power reading from the ADC
+        ///</summary>
         public async Task<double> getPower(CHANNELS channel)
         {
             double value = Double.Parse(await telnetCommand("MEASure:POWEr? " + returnChannel(channel), true));
-
-            Console.WriteLine(value);
             return value;
         }
 
 
 
-
+        ///<summary>
+        /// Gets the Mode (CV/CC) of the givven channel 
+        ///</summary>
         public async Task<CHANNEL_MODE> getChannelMode(CHANNELS channel)
         {
             bool[] status = await getSystemStatus();
@@ -205,16 +226,18 @@ namespace SPD3303X_E
                 case CHANNELS.CH1:
                     if (status[0]) { return CHANNEL_MODE.CC; }
                     else { return CHANNEL_MODE.CV; }
-                
+
                 case CHANNELS.CH2:
                     if (status[1]) { return CHANNEL_MODE.CC; }
                     else { return CHANNEL_MODE.CV; }
 
-                default: return CHANNEL_MODE.CV; 
+                default: return CHANNEL_MODE.CV;
             }
         }
 
-
+        ///<summary>
+        /// Gets the Output Stateof the givven channel 
+        ///</summary>
         public async Task<SWITCH> getChannelStatus(CHANNELS channel)
         {
             bool[] status = await getSystemStatus();
@@ -233,7 +256,9 @@ namespace SPD3303X_E
             }
         }
 
-
+        ///<summary>
+        /// Gets the Output Stateof the givven channel 
+        ///</summary>
         public async Task<SWITCH> getTimerStatus(TIMERS timer)
         {
             bool[] status = await getSystemStatus();
@@ -252,6 +277,9 @@ namespace SPD3303X_E
             }
         }
 
+        ///<summary>
+        /// Gets the State of the waveForm display of the givven channel 
+        ///</summary>
         public async Task<DISPLAYS> getDisplay(CHANNELS channel)
         {
             bool[] status = await getSystemStatus();
@@ -269,6 +297,9 @@ namespace SPD3303X_E
             }
         }
 
+        ///<summary>
+        /// Gets the Connection Mode (Serial / Parallel)
+        ///</summary>
         public async Task<CONNECTION_MODE> getConnectionMode()
         {
             bool[] status = await getSystemStatus();
@@ -287,10 +318,20 @@ namespace SPD3303X_E
             }
         }
 
-        public async Task<string> getInstrumentDHCP()
+        public async Task<bool> getInstrumentDHCP()
         {
             string response = await telnetCommand("DHCP?", true);
-            return response;
+            
+            bool dhcpStatus = false;
+            if (response.Contains("DHCP:ON"))
+            {
+                dhcpStatus = true;
+            }
+            if(response.Contains("DHCP:OFF"))
+            {
+                dhcpStatus= false;
+            }
+            return dhcpStatus;           
         }
 
         public async Task<string> getInstrumentIP()
@@ -316,7 +357,7 @@ namespace SPD3303X_E
             await telnetCommand(returnChannel(channel) + ":CURRent " + value, false);
         }
 
-
+        //OUTPut:WAVE CH1,ON
         public async Task setVoltage(CHANNELS channel, double value)
         {
             await telnetCommand(returnChannel(channel) + ":VOLTage " + value, false);
@@ -325,7 +366,7 @@ namespace SPD3303X_E
 
         public async Task setChannelStatus(CHANNELS channel, SWITCH status)
         {
-            await telnetCommand("OUTPut "+returnChannel(channel)+","+returnSwitch(status), false);
+            await telnetCommand("OUTPut " + returnChannel(channel) + "," + returnSwitch(status), false);
         }
 
 
@@ -337,7 +378,7 @@ namespace SPD3303X_E
 
         public async Task setWaveformDisplay(CHANNELS channel, SWITCH sWITCH)
         {
-            await telnetCommand("OUTPut:WAVE "+returnChannel(channel)+","+returnSwitch(sWITCH), false);
+            await telnetCommand("OUTPut:WAVE " + returnChannel(channel) + "," + returnSwitch(sWITCH), false);
         }
 
 
@@ -349,13 +390,13 @@ namespace SPD3303X_E
 
         public async Task setInstrumentIP(string IP)
         {
-            await telnetCommand("IPaddr "+IP, false);
+            await telnetCommand("IPaddr " + IP, false);
         }
 
 
         public async Task setInstrumentMask(string address)
         {
-            await telnetCommand("MASKaddr "+address, false);
+            await telnetCommand("MASKaddr " + address, false);
         }
 
 
