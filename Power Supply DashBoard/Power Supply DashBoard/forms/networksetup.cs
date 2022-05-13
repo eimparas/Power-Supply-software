@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using SPD3303X_E;
 
 namespace Power_Supply_DashBoard
 {
@@ -45,9 +46,13 @@ namespace Power_Supply_DashBoard
         void Connect()
         {
             string _ip = ip1.Text + '.' + ip2.Text+'.'+ ip3.Text+ip4.Text;
-            main main = new main();
+            /*main main = new main();
             main.connect(_ip);
-            Thread.Sleep(100);
+            Thread.Sleep(100);*/
+            main._SCPI = new SocketManagement(_ip, 5025);
+            main._SCPI.connect();
+            main.Chart1Timer.Start();
+            main.Chart2Timer.Start();
             this.Close();
         }
         private void keyDn(object sender, KeyEventArgs e)
