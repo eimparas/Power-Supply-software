@@ -83,10 +83,14 @@ namespace SPD3303X_E
         }
         
         //"System Status " command parser
-        private async Task<bool[]> getSystemStatus()
-        {
-            bool[] status = new bool[10];
+        private async Task<int[]> getSystemStatus()
+        {            
+        int[] S_buffer;
+        string bytes;
+        int[] status = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             String receive = await telnetCommand("SYSTem:STATus?", true);
+            /*
+            bool[] status = new bool[10];            
             Regex regex = new Regex(@"(?<=0x)[A-Fa-f0-9]+"); //regex for hexadecimal, to discard all following invalid characters, without 0x prefix (positive lookbehind)
             string value = regex.Match(receive).Value;  //telnet bullshit, rejects 0 in the end.
             if(value.Length < 2) { value = value + "0"; };
@@ -106,6 +110,43 @@ namespace SPD3303X_E
                     status[i] = false;
                 }
             }
+            */
+        try
+            {
+                string[] inp = receive.Text.Split('x');//data recived
+                for (int i = 0; i <= status.Length - 1; i++)//reset status variable
+                {
+                    status[i] = 0;
+                }
+
+                if (inp[1].Length <= 1)//for single digit nums in order to have a normal conversion we add a hex 0 
+                {
+                    inp[1] += '0'; //to the end a it will normalise the data 
+                }
+                Debug.WriteLine(inp[1]);
+                bytes = Convert.ToString(Convert.ToInt32(inp[1], 16), 2);//hex to binary
+                Debug.WriteLine(bytes);
+                S_buffer = bytes.ToString().ToCharArray().Select(x => (int)Char.GetNumericValue(x)).ToArray();//split to array while casting to int
+                Debug.WriteLine(bytes + " s_b_lngth " + S_buffer.Length);
+                int j = status.Length - 1;
+                for (int i = S_buffer.Length - 1; i >= 0; i--)//transfer values to starus array for prosessing 
+                {
+                    Debug.WriteLine(i + " j= " + j);
+                    status[j] = S_buffer[i];
+                    j--;
+                }
+                
+                for (int k = 0; k <= 9; k++)//debuging stuff
+                {
+                    Debug.Write(status[k]);
+                }
+            }
+            catch (Exception exe)
+            {
+                Debug.WriteLine(exe);
+                return;
+            }
+            //Instrument(hex)=>bytes(bin)=>S_buffer(int array) =>status[](output)
 
             return status;
         }
@@ -282,15 +323,15 @@ namespace SPD3303X_E
         ///</summary>
         public async Task<DISPLAYS> getDisplay(CHANNELS channel)
         {
-            bool[] status = await getSystemStatus();
+            int[] status = await getSystemStatus();
             switch (channel)
             {
                 case CHANNELS.CH1:
-                    if (status[8]) { return DISPLAYS.WAVEFORM; }
+                    if (status[8]==1) { return DISPLAYS.WAVEFORM; }
                     else { return DISPLAYS.DIGITAL; }
 
                 case CHANNELS.CH2:
-                    if (status[9]) { return DISPLAYS.WAVEFORM; }
+                    if (status[9]==1) { return DISPLAYS.WAVEFORM; }
                     else { return DISPLAYS.DIGITAL; }
 
                 default: return DISPLAYS.DIGITAL;
@@ -302,8 +343,8 @@ namespace SPD3303X_E
         ///</summary>
         public async Task<CONNECTION_MODE> getConnectionMode()
         {
-            bool[] status = await getSystemStatus();
-            if (status[2])
+            int[] status = await getSystemStatus();
+            if (status[2]==1)
             {
                 if (status[3])
                 {
