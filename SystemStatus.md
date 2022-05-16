@@ -18,3 +18,9 @@ follow
 |7|0: TIMER2 OFF 1: TIMER2 ON|
 |8|0: CH1 digital display; 1: CH1 waveform diplay|
 |9|0: CH2 digital display; 1: CH2 waveform diplay|
+
+example: 
+* Base (CV/CV,Indie mode, CH1 off, CH2 OFF Timers off CH1/CH2 Digital Display) : 0x4
+* CH1ON: `0x14`
+* CH2ON: `0x24`
+* Serial: `0xc`
