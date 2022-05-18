@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -85,8 +86,7 @@ namespace SPD3303X_E
         //"System Status " command parser
         private async Task<int[]> getSystemStatus()
         {            
-        int[] S_buffer;
-        string bytes;
+        int input;
         int[] status = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             String receive = await telnetCommand("SYSTem:STATus?", true);
             /*
@@ -113,38 +113,66 @@ namespace SPD3303X_E
             */
         try
             {
-                string[] inp = receive.Text.Split('x');//data recived
-                for (int i = 0; i <= status.Length - 1; i++)//reset status variable
+                string[] inp = receive.Split('x');//data recived
+                for (int i = 0; i < 10; i++)//reset status variable
                 {
                     status[i] = 0;
                 }
 
-                if (inp[1].Length <= 1)//for single digit nums in order to have a normal conversion we add a hex 0 
-                {
-                    inp[1] += '0'; //to the end a it will normalise the data 
-                }
+                //if (inp[1].Length <= 1)//for single digit nums in order to have a normal conversion we add a hex 0 
+                //{
+                //    inp[1] += '0'; //to the end a it will normalise the data 
+                //}
                 Debug.WriteLine(inp[1]);
-                bytes = Convert.ToString(Convert.ToInt32(inp[1], 16), 2);//hex to binary
-                Debug.WriteLine(bytes);
-                S_buffer = bytes.ToString().ToCharArray().Select(x => (int)Char.GetNumericValue(x)).ToArray();//split to array while casting to int
-                Debug.WriteLine(bytes + " s_b_lngth " + S_buffer.Length);
-                int j = status.Length - 1;
-                for (int i = S_buffer.Length - 1; i >= 0; i--)//transfer values to starus array for prosessing 
+                inp[1] = inp[1].Trim('\0');
+                inp[1] = inp[1].Remove(inp[1].Length - 1);
+                input = Convert.ToInt32(inp[1], 16);//hex to binary
+                Debug.WriteLine(input);
+                for (int i = 0; i < 10; i++)
                 {
-                    Debug.WriteLine(i + " j= " + j);
-                    status[j] = S_buffer[i];
-                    j--;
+                    status[i] = input & 1;
+                    input = input >> 1;
                 }
-                
-                for (int k = 0; k <= 9; k++)//debuging stuff
+
+                for (int i = 0; i < status.Length; i++)//transfer values to starus array for prosessing 
                 {
-                    Debug.Write(status[k]);
+                    Debug.Write(status[i]);
+
                 }
+                Debug.WriteLine("");
+
+                //string[] inp = receive.Split('x');//data recived
+                //for (int i = 0; i <= status.Length - 1; i++)//reset status variable
+                //{
+                //    status[i] = 0;
+                //}
+
+                //if (inp[1].Length <= 1)//for single digit nums in order to have a normal conversion we add a hex 0 
+                //{
+                //    inp[1] += '0'; //to the end a it will normalise the data 
+                //}
+                //Debug.WriteLine(inp[1]);
+                //bytes = Convert.ToString(Convert.ToInt32(inp[1], 16), 2);//hex to binary
+                //Debug.WriteLine(bytes);
+                //S_buffer = bytes.ToString().ToCharArray().Select(x => (int)Char.GetNumericValue(x)).ToArray();//split to array while casting to int
+                //Debug.WriteLine(bytes + " s_b_lngth " + S_buffer.Length);
+                //int j = status.Length - 1;
+                //for (int i = S_buffer.Length - 1; i >= 0; i--)//transfer values to starus array for prosessing 
+                //{
+                //    Debug.WriteLine(i + " j= " + j);
+                //    status[j] = S_buffer[i];
+                //    j--;
+                //}
+
+                //for (int k = 0; k <= 9; k++)//debuging stuff
+                //{
+                //    Debug.Write(status[k]);
+                //}
             }
             catch (Exception exe)
             {
-                Debug.WriteLine(exe);
-                return;
+                Console.WriteLine(exe);
+                
             }
             //Instrument(hex)=>bytes(bin)=>S_buffer(int array) =>status[](output)
 
@@ -261,16 +289,24 @@ namespace SPD3303X_E
         ///</summary>
         public async Task<CHANNEL_MODE> getChannelMode(CHANNELS channel)
         {
-            bool[] status = await getSystemStatus();
+            int[] status = await getSystemStatus();
             switch (channel)
             {
                 case CHANNELS.CH1:
-                    if (status[0]) { return CHANNEL_MODE.CC; }
-                    else { return CHANNEL_MODE.CV; }
+                    if (status[0]==1) {
+                        return CHANNEL_MODE.CC;
+                    }
+                    else {
+                        return CHANNEL_MODE.CV;
+                    }
 
                 case CHANNELS.CH2:
-                    if (status[1]) { return CHANNEL_MODE.CC; }
-                    else { return CHANNEL_MODE.CV; }
+                    if (status[1]==1) {
+                        return CHANNEL_MODE.CC;
+                    }
+                    else {
+                        return CHANNEL_MODE.CV;
+                    }
 
                 default: return CHANNEL_MODE.CV;
             }
@@ -281,16 +317,24 @@ namespace SPD3303X_E
         ///</summary>
         public async Task<SWITCH> getChannelStatus(CHANNELS channel)
         {
-            bool[] status = await getSystemStatus();
+            int[] status = await getSystemStatus();
             switch (channel)
             {
                 case CHANNELS.CH1:
-                    if (status[4]) { return SWITCH.ON; }
-                    else { return SWITCH.OFF; }
+                    if (status[4]==1) {
+                        return SWITCH.ON;
+                    }
+                    else {
+                        return SWITCH.OFF;
+                    }
 
                 case CHANNELS.CH2:
-                    if (status[5]) { return SWITCH.ON; }
-                    else { return SWITCH.OFF; }
+                    if (status[5]==1) {
+                        return SWITCH.ON;
+                    }
+                    else {
+                        return SWITCH.OFF;
+                    }
 
 
                 default: return SWITCH.ON;
@@ -302,16 +346,24 @@ namespace SPD3303X_E
         ///</summary>
         public async Task<SWITCH> getTimerStatus(TIMERS timer)
         {
-            bool[] status = await getSystemStatus();
+            int[] status = await getSystemStatus();
             switch (timer)
             {
                 case TIMERS.TIMER1:
-                    if (status[6]) { return SWITCH.ON; }
-                    else { return SWITCH.OFF; }
+                    if (status[6]==1) {
+                        return SWITCH.ON;
+                    }
+                    else {
+                        return SWITCH.OFF;
+                    }
 
                 case TIMERS.TIMER2:
-                    if (status[7]) { return SWITCH.ON; }
-                    else { return SWITCH.OFF; }
+                    if (status[7]==1) {
+                        return SWITCH.ON;
+                    }
+                    else {
+                        return SWITCH.OFF;
+                    }
 
 
                 default: return SWITCH.ON;
@@ -327,12 +379,20 @@ namespace SPD3303X_E
             switch (channel)
             {
                 case CHANNELS.CH1:
-                    if (status[8]==1) { return DISPLAYS.WAVEFORM; }
-                    else { return DISPLAYS.DIGITAL; }
+                    if (status[8]==1) {
+                        return DISPLAYS.WAVEFORM; 
+                    }
+                    else {
+                        return DISPLAYS.DIGITAL;
+                    }
 
                 case CHANNELS.CH2:
-                    if (status[9]==1) { return DISPLAYS.WAVEFORM; }
-                    else { return DISPLAYS.DIGITAL; }
+                    if (status[9]==1) {
+                        return DISPLAYS.WAVEFORM;
+                    }
+                    else {
+                        return DISPLAYS.DIGITAL; 
+                    }
 
                 default: return DISPLAYS.DIGITAL;
             }
@@ -346,19 +406,28 @@ namespace SPD3303X_E
             int[] status = await getSystemStatus();
             if (status[2]==1)
             {
-                if (status[3])
+                if (status[3]==1)
                 {
                     return CONNECTION_MODE.SERIES;
                 }
-                else { return CONNECTION_MODE.PARALLEL; }
+                else {
+                    return CONNECTION_MODE.PARALLEL;
+                }
             }
             else
             {
-                if (status[3]) { return CONNECTION_MODE.INDEPENDENT; }
-                else { return CONNECTION_MODE.NONE; }
+                if (status[3]==1) {
+                    return CONNECTION_MODE.INDEPENDENT;
+                }
+                else {
+                    return CONNECTION_MODE.NONE;
+                }
             }
         }
-
+		
+		///<summary>
+        /// Gets the Network address mode (DHCP/static)
+        ///</summary>
         public async Task<bool> getInstrumentDHCP()
         {
             string response = await telnetCommand("DHCP?", true);
@@ -375,48 +444,68 @@ namespace SPD3303X_E
             return dhcpStatus;           
         }
 
+		///<summary>
+        /// Gets the IP Address
+        ///</summary>
         public async Task<string> getInstrumentIP()
         {
             string response = await telnetCommand("IPaddr?", true);
             return response;
         }
-
+		
+		///<summary>
+        /// Gets the Subnet Mask
+        ///</summary>
         public async Task<string> getInstrumentMask()
         {
             string response = await telnetCommand("MASKaddr?", true);
             return response;
         }
-
+		
+		///<summary>
+        /// Gets the Gateway
+        ///</summary>
         public async Task<string> getInstrumentGateway()
         {
             string response = await telnetCommand("GATEaddr?", true);
             return response;
         }
-
+		
+		///<summary>
+        /// Sets the Current SetPoint: setCurrent(CHANNELS channel, double value)
+        ///</summary>
         public async Task setCurrent(CHANNELS channel, double value)
         {
             await telnetCommand(returnChannel(channel) + ":CURRent " + value, false);
         }
 
-        //OUTPut:WAVE CH1,ON
+        ///<summary>
+        /// Sets the Voltage SetPoint: setVoltage(CHANNELS channel, double value)
+        ///</summary>
         public async Task setVoltage(CHANNELS channel, double value)
         {
             await telnetCommand(returnChannel(channel) + ":VOLTage " + value, false);
         }
-
-
+		
+		///<summary>
+        /// Sets the output status: (ON/OFF) setChannelStatus(CHANNELS channel, SWITCH status)
+        ///</summary>
         public async Task setChannelStatus(CHANNELS channel, SWITCH status)
         {
             await telnetCommand("OUTPut " + returnChannel(channel) + "," + returnSwitch(status), false);
         }
-
-
+		
+		///<summary>
+        /// Sets the output mode: setChannelConnection(CONNECTION_MODE mode)
+        ///</summary>
         public async Task setChannelConnection(CONNECTION_MODE mode)
         {
             await telnetCommand("OUTPut:TRACK " + returnConnectionMode(mode), false);
         }
-
-
+		
+		///<summary>
+        /// Sets the status of the waveForm Display: setWaveformDisplay(CHANNELS channel, SWITCH sWITCH)
+        ///</summary>
         public async Task setWaveformDisplay(CHANNELS channel, SWITCH sWITCH)
         {
             await telnetCommand("OUTPut:WAVE " + returnChannel(channel) + "," + returnSwitch(sWITCH), false);
@@ -445,14 +534,18 @@ namespace SPD3303X_E
         {
             await telnetCommand("GATEaddr " + gateway, false);
         }
-
-
+		
+		///<summary>
+        /// Saves macine`s current status to memory: saveCurrentState(MEMORIES memory)
+        ///</summary>
         public async Task saveCurrentState(MEMORIES memory)
         {
             await telnetCommand("*SAV " + returnMemory(memory), false);
         }
-
-
+		
+		///<summary>
+        /// Recal previusly saved macine status: recallState(MEMORIES memory)
+        ///</summary>
         public async Task recallState(MEMORIES memory)
         {
             await telnetCommand("*RCL " + returnMemory(memory), false);
