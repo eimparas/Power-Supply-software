@@ -49,10 +49,34 @@ namespace Power_Supply_DashBoard
             /*main main = new main();
             main.connect(_ip);
             Thread.Sleep(100);*/
-            main._SCPI = new SocketManagement(_ip, 5025);
-            main._SCPI.connect();
-            main.Chart1Timer.Start();
-            main.Chart2Timer.Start();
+            try
+            {
+                main._SCPI = new SocketManagement(_ip, 5025);
+                main._SCPI.connect();
+                main.Chart1Timer.Start();
+                //main.Chart2Timer.Start();
+                //main.SCPI_Timer.Start();
+            }
+            catch (Exception ex)
+            {
+                //MessageBox.Show(ex.Message);
+                
+                string message = ex.Message;
+                string caption = "Error Detected in Establishing Connection";
+                MessageBoxButtons buttons = MessageBoxButtons.AbortRetryIgnore;
+                DialogResult result;
+                result = MessageBox.Show(message, caption, buttons);
+                if (result == DialogResult.Abort)
+                {
+                    // Closes the parent form.
+                    this.Close();
+                }
+                
+                if(result == DialogResult.Retry)
+                {
+                    Connect();
+                }
+            }
             this.Close();
         }
         private void keyDn(object sender, KeyEventArgs e)
