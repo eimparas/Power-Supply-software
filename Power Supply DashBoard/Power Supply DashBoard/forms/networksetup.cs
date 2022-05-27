@@ -46,21 +46,14 @@ namespace Power_Supply_DashBoard
         void Connect()
         {
             string _ip = ip1.Text + '.' + ip2.Text+'.'+ ip3.Text+ip4.Text;
-            /*main main = new main();
-            main.connect(_ip);
-            Thread.Sleep(100);*/
             try
             {
                 main._SCPI = new SocketManagement(_ip, 5025);
                 main._SCPI.connect();
                 main.Chart1Timer.Start();
-                //main.Chart2Timer.Start();
-                //main.SCPI_Timer.Start();
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
-                
                 string message = ex.Message;
                 string caption = "Error Detected in Establishing Connection";
                 MessageBoxButtons buttons = MessageBoxButtons.AbortRetryIgnore;
@@ -87,6 +80,5 @@ namespace Power_Supply_DashBoard
                 Connect();
             }
         }
-
     }
 }

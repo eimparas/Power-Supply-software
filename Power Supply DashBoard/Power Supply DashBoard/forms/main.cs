@@ -28,14 +28,11 @@ namespace Power_Supply_DashBoard
         byte[] bytes = new byte[1024];
         public static SocketManagement _SCPI;
         public static Timer Chart1Timer, Chart2Timer;
-        //public static Timer SCPI_Timer = new Timer();
-
+        double voltageCH1 = 0.0;
+        double currentCH1 = 0.0;
 
         public main()
         {
-            /*SCPI_Timer.Interval = 100;
-            SCPI_Timer.Tick += DataAcquisition;
-            SCPI_Timer.Enabled=false;*/
             InitializeComponent();
             Chart1Timer = Chart1Roll;
             Chart2Timer = Chart2Roll;
@@ -53,49 +50,12 @@ namespace Power_Supply_DashBoard
         //data acquisition timer(s)
         //########################################
         #region data acquisition
-        private void DataAcquisition(object myObject, EventArgs myEventArgs)
-        {
-            Task.Run(async () => {
-                double voltageCH1 = await _SCPI.getVoltage(CHANNELS.CH1);
-                double currentCH1 = await _SCPI.getCurrent(CHANNELS.CH1);
-                GridlinesOffset++;
-                chart1.Invoke(new Action(() => {
-                    CH1vS.Text = Convert.ToString(voltageCH1);
-                    CH1aS.Text = Convert.ToString(currentCH1);
-                    chart1.Series["Voltage"].Points.AddY(Convert.ToDecimal(voltageCH1));//data point 
-                    chart1.Series["Voltage"].Points.RemoveAt(0);
-                    chart1.Series["current"].Points.AddY(Convert.ToDecimal(currentCH1));//data point 
-                    chart1.Series["current"].Points.RemoveAt(0);
-                    chart1.ChartAreas[0].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
-                    chart1.ChartAreas[1].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
-                    GridlinesOffset %= (int)chart1.ChartAreas[0].AxisX.MajorGrid.Interval;
-                    GridlinesOffset %= (int)chart1.ChartAreas[1].AxisX.MajorGrid.Interval;
-                }));
-
-                double voltageCH2 = await _SCPI.getVoltage(CHANNELS.CH2);
-                double currentCH2 = await _SCPI.getCurrent(CHANNELS.CH2);
-                chart2.Invoke(new Action(() =>
-                {
-                    CH2vS.Text = Convert.ToString(voltageCH2);
-                    CH2aS.Text = Convert.ToString(currentCH2);
-                    chart2.Series["Voltage"].Points.AddY(Convert.ToDecimal(voltageCH2));//data point 
-                    chart2.Series["Voltage"].Points.RemoveAt(0);
-                    chart2.Series["current"].Points.AddY(Convert.ToDecimal(currentCH2));//data point 
-                    chart2.Series["current"].Points.RemoveAt(0);
-                    chart2.ChartAreas[0].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
-                    chart2.ChartAreas[1].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
-                    GridlinesOffset %= (int)chart2.ChartAreas[0].AxisX.MajorGrid.Interval;
-                    GridlinesOffset %= (int)chart2.ChartAreas[1].AxisX.MajorGrid.Interval;
-                }));
-
-            });
-        }
-
         private void Chart1Roll_Tick(object sender, EventArgs e)
         {
             Task.Run(async () => {
-                double voltageCH1 = await _SCPI.getVoltage(CHANNELS.CH1);
-                double currentCH1 = await _SCPI.getCurrent(CHANNELS.CH1);
+                voltageCH1 = await _SCPI.getVoltage(CHANNELS.CH1);
+                currentCH1 = await _SCPI.getCurrent(CHANNELS.CH1);
+
                 GridlinesOffset++;
                 chart1.Invoke(new Action(() => {
                     CH1vS.Text = Convert.ToString(voltageCH1);
@@ -127,10 +87,18 @@ namespace Power_Supply_DashBoard
                 DISPLAYS d1 = await _SCPI.getDisplay(CHANNELS.CH1);
                 DISPLAYS d2 = await _SCPI.getDisplay(CHANNELS.CH2);
                 CONNECTION_MODE connectionMode = await _SCPI.getConnectionMode();
+                CHANNELS active = await _SCPI.getActiveChannel();
                 if(d1 == DISPLAYS.WAVEFORM)
                 {
                     WaveformCH1.Invoke(new Action(() => {
                         WaveformCH1.Checked = true;
+                    }));
+                }
+                else
+                {
+                    WaveformCH1.Invoke(new Action(() =>
+                    {
+                        WaveformCH1.Checked = false;
                     }));
                 }
                 if (d2 == DISPLAYS.WAVEFORM)
@@ -138,6 +106,13 @@ namespace Power_Supply_DashBoard
                     WaveformCH2.Invoke(new Action(() =>
                     {
                         WaveformCH2.Checked = true;
+                    }));
+                }
+                else
+                {
+                    WaveformCH2.Invoke(new Action(() =>
+                    {
+                        WaveformCH2.Checked = false;
                     }));
                 }
                 switch (connectionMode)
@@ -200,6 +175,33 @@ namespace Power_Supply_DashBoard
                         {
                             Par_RB.Checked = false;
                         }));
+                        break;
+                }
+                
+                switch (active)
+                {
+                    case CHANNELS.CH1:
+                        CH1activeRB.Invoke(new Action(() => {
+                            CH1activeRB.Checked = true;
+                        }));
+                        CH2activeRB.Invoke(new Action(() =>
+                        {
+                            CH2activeRB.Checked = false;
+                        }));
+                        break;
+
+                    case CHANNELS.CH2:
+                        CH1activeRB.Invoke(new Action(() => {
+                            CH1activeRB.Checked = false;
+                        }));
+                        CH2activeRB.Invoke(new Action(() =>
+                        {
+                            CH2activeRB.Checked = true;
+                        }));
+                        break;
+
+                    default:
+                        Console.WriteLine("ACTIVE CHANNEL FETCH FAILED");
                         break;
                 }
             });
