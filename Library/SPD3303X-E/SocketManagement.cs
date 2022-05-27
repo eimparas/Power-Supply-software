@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
@@ -31,7 +31,7 @@ namespace SPD3303X_E
     public enum CONNECTION_MODE { SERIES, PARALLEL, INDEPENDENT, NONE }
 
 
-    internal class SocketManagement
+    public class SocketManagement
     {
         private IPAddress IP_ADDRESS = null;
         private int IP_PORT;
@@ -65,29 +65,29 @@ namespace SPD3303X_E
                 SCPI.Dispose();
             }
         }
-       
+
         //Private Function for Coms 
         private async Task<string> telnetCommand(string cmd, bool wait)
         {
             byte[] command = Encoding.ASCII.GetBytes(cmd);
-            await SCPI.SendAsync(command, SocketFlags.None);
-            await Task.Delay(100);//DataRace reasons
+            SCPI.Send(command, SocketFlags.None);
+            await Task.Delay(110);//DataRace reasons
             if (wait)
             {
                 byte[] buffer = new byte[1024];
-                await SCPI.ReceiveAsync(buffer, SocketFlags.None);
+                SCPI.Receive(buffer, SocketFlags.None);
                 string response = Encoding.ASCII.GetString(buffer);
                 return response;
             }
             return "";
 
         }
-        
+
         //"System Status " command parser
         private async Task<int[]> getSystemStatus()
-        {            
-        int input;
-        int[] status = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        {
+            int input;
+            int[] status = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             String receive = await telnetCommand("SYSTem:STATus?", true);
             /*
             bool[] status = new bool[10];            
@@ -111,7 +111,7 @@ namespace SPD3303X_E
                 }
             }
             */
-        try
+            try
             {
                 string[] inp = receive.Split('x');//data recived
                 for (int i = 0; i < 10; i++)//reset status variable
@@ -172,7 +172,7 @@ namespace SPD3303X_E
             catch (Exception exe)
             {
                 Console.WriteLine(exe);
-                
+
             }
             //Instrument(hex)=>bytes(bin)=>S_buffer(int array) =>status[](output)
 
@@ -251,8 +251,30 @@ namespace SPD3303X_E
         ///</summary>
         public async Task<string> getIDN()
         {
-            string ret = await telnetCommand("*IDN?", true);           
+            string ret = await telnetCommand("*IDN?", true);
             return ret;
+        }
+	    
+	    
+	///<summary>
+        /// Gets the active channel of the instrument.
+        ///</summary>
+	    
+        public async Task<CHANNELS> getActiveChannel()
+        {
+            string ret = await telnetCommand("INSTrument?", true);
+            int ch = Int32.Parse(ret.Substring(2));
+            switch (ch)
+            {
+                case 1:
+                    return CHANNELS.CH1;
+
+                case 2:
+                    return CHANNELS.CH2;
+
+                default:
+                    return CHANNELS.CH3;
+            }
         }
 
         ///<summary>
@@ -260,7 +282,7 @@ namespace SPD3303X_E
         ///</summary>
         public async Task<double> getVoltage(CHANNELS channel)
         {
-            double value = Double.Parse(await telnetCommand(returnChannel(channel) + ":VOLTage?", true));           
+            double value = Double.Parse(await telnetCommand(returnChannel(channel) + ":VOLTage?", true));
             return value;
         }
 
@@ -269,7 +291,7 @@ namespace SPD3303X_E
         ///</summary>
         public async Task<double> getCurrent(CHANNELS channel)
         {
-            double value = Double.Parse(await telnetCommand(returnChannel(channel) + ":CURRent?", true));            
+            double value = Double.Parse(await telnetCommand(returnChannel(channel) + ":CURRent?", true));
             return value;
         }
 
@@ -293,18 +315,22 @@ namespace SPD3303X_E
             switch (channel)
             {
                 case CHANNELS.CH1:
-                    if (status[0]==1) {
+                    if (status[0] == 1)
+                    {
                         return CHANNEL_MODE.CC;
                     }
-                    else {
+                    else
+                    {
                         return CHANNEL_MODE.CV;
                     }
 
                 case CHANNELS.CH2:
-                    if (status[1]==1) {
+                    if (status[1] == 1)
+                    {
                         return CHANNEL_MODE.CC;
                     }
-                    else {
+                    else
+                    {
                         return CHANNEL_MODE.CV;
                     }
 
@@ -321,18 +347,22 @@ namespace SPD3303X_E
             switch (channel)
             {
                 case CHANNELS.CH1:
-                    if (status[4]==1) {
+                    if (status[4] == 1)
+                    {
                         return SWITCH.ON;
                     }
-                    else {
+                    else
+                    {
                         return SWITCH.OFF;
                     }
 
                 case CHANNELS.CH2:
-                    if (status[5]==1) {
+                    if (status[5] == 1)
+                    {
                         return SWITCH.ON;
                     }
-                    else {
+                    else
+                    {
                         return SWITCH.OFF;
                     }
 
@@ -350,18 +380,22 @@ namespace SPD3303X_E
             switch (timer)
             {
                 case TIMERS.TIMER1:
-                    if (status[6]==1) {
+                    if (status[6] == 1)
+                    {
                         return SWITCH.ON;
                     }
-                    else {
+                    else
+                    {
                         return SWITCH.OFF;
                     }
 
                 case TIMERS.TIMER2:
-                    if (status[7]==1) {
+                    if (status[7] == 1)
+                    {
                         return SWITCH.ON;
                     }
-                    else {
+                    else
+                    {
                         return SWITCH.OFF;
                     }
 
@@ -379,19 +413,23 @@ namespace SPD3303X_E
             switch (channel)
             {
                 case CHANNELS.CH1:
-                    if (status[8]==1) {
-                        return DISPLAYS.WAVEFORM; 
+                    if (status[8] == 1)
+                    {
+                        return DISPLAYS.WAVEFORM;
                     }
-                    else {
+                    else
+                    {
                         return DISPLAYS.DIGITAL;
                     }
 
                 case CHANNELS.CH2:
-                    if (status[9]==1) {
+                    if (status[9] == 1)
+                    {
                         return DISPLAYS.WAVEFORM;
                     }
-                    else {
-                        return DISPLAYS.DIGITAL; 
+                    else
+                    {
+                        return DISPLAYS.DIGITAL;
                     }
 
                 default: return DISPLAYS.DIGITAL;
@@ -404,47 +442,50 @@ namespace SPD3303X_E
         public async Task<CONNECTION_MODE> getConnectionMode()
         {
             int[] status = await getSystemStatus();
-            if (status[2]==1)
+            if (status[2] == 1)
             {
-                if (status[3]==1)
+                if (status[3] == 1)
                 {
                     return CONNECTION_MODE.SERIES;
                 }
-                else {
-                    return CONNECTION_MODE.PARALLEL;
+                else
+                {
+                    return CONNECTION_MODE.INDEPENDENT;
                 }
             }
             else
             {
-                if (status[3]==1) {
-                    return CONNECTION_MODE.INDEPENDENT;
+                if (status[3] == 1)
+                {
+                    return CONNECTION_MODE.PARALLEL;
                 }
-                else {
+                else
+                {
                     return CONNECTION_MODE.NONE;
                 }
             }
         }
-		
-		///<summary>
+
+        ///<summary>
         /// Gets the Network address mode (DHCP/static)
         ///</summary>
         public async Task<bool> getInstrumentDHCP()
         {
             string response = await telnetCommand("DHCP?", true);
-            
+
             bool dhcpStatus = false;
             if (response.Contains("DHCP:ON"))
             {
                 dhcpStatus = true;
             }
-            if(response.Contains("DHCP:OFF"))
+            if (response.Contains("DHCP:OFF"))
             {
-                dhcpStatus= false;
+                dhcpStatus = false;
             }
-            return dhcpStatus;           
+            return dhcpStatus;
         }
 
-		///<summary>
+        ///<summary>
         /// Gets the IP Address
         ///</summary>
         public async Task<string> getInstrumentIP()
@@ -452,8 +493,8 @@ namespace SPD3303X_E
             string response = await telnetCommand("IPaddr?", true);
             return response;
         }
-		
-		///<summary>
+
+        ///<summary>
         /// Gets the Subnet Mask
         ///</summary>
         public async Task<string> getInstrumentMask()
@@ -461,8 +502,8 @@ namespace SPD3303X_E
             string response = await telnetCommand("MASKaddr?", true);
             return response;
         }
-		
-		///<summary>
+
+        ///<summary>
         /// Gets the Gateway
         ///</summary>
         public async Task<string> getInstrumentGateway()
@@ -470,8 +511,8 @@ namespace SPD3303X_E
             string response = await telnetCommand("GATEaddr?", true);
             return response;
         }
-		
-		///<summary>
+
+        ///<summary>
         /// Sets the Current SetPoint: setCurrent(CHANNELS channel, double value)
         ///</summary>
         public async Task setCurrent(CHANNELS channel, double value)
@@ -486,24 +527,24 @@ namespace SPD3303X_E
         {
             await telnetCommand(returnChannel(channel) + ":VOLTage " + value, false);
         }
-		
-		///<summary>
+
+        ///<summary>
         /// Sets the output status: (ON/OFF) setChannelStatus(CHANNELS channel, SWITCH status)
         ///</summary>
         public async Task setChannelStatus(CHANNELS channel, SWITCH status)
         {
             await telnetCommand("OUTPut " + returnChannel(channel) + "," + returnSwitch(status), false);
         }
-		
-		///<summary>
+
+        ///<summary>
         /// Sets the output mode: setChannelConnection(CONNECTION_MODE mode)
         ///</summary>
         public async Task setChannelConnection(CONNECTION_MODE mode)
         {
             await telnetCommand("OUTPut:TRACK " + returnConnectionMode(mode), false);
         }
-		
-		///<summary>
+
+        ///<summary>
         /// Sets the status of the waveForm Display: setWaveformDisplay(CHANNELS channel, SWITCH sWITCH)
         ///</summary>
         public async Task setWaveformDisplay(CHANNELS channel, SWITCH sWITCH)
@@ -534,16 +575,16 @@ namespace SPD3303X_E
         {
             await telnetCommand("GATEaddr " + gateway, false);
         }
-		
-		///<summary>
+
+        ///<summary>
         /// Saves macine`s current status to memory: saveCurrentState(MEMORIES memory)
         ///</summary>
         public async Task saveCurrentState(MEMORIES memory)
         {
             await telnetCommand("*SAV " + returnMemory(memory), false);
         }
-		
-		///<summary>
+
+        ///<summary>
         /// Recal previusly saved macine status: recallState(MEMORIES memory)
         ///</summary>
         public async Task recallState(MEMORIES memory)
