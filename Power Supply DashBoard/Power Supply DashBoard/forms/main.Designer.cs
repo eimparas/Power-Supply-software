@@ -528,6 +528,7 @@
             this.CH2onOFF.TabIndex = 23;
             this.CH2onOFF.Text = " ON OFF";
             this.CH2onOFF.UseVisualStyleBackColor = true;
+            this.CH2onOFF.CheckedChanged += new System.EventHandler(this.CH2onOFF_CheckedChanged);
             // 
             // panel3
             // 

@@ -22,6 +22,7 @@ namespace Power_Supply_DashBoard
     {
         int GridlinesOffset = 0;
         bool CH1onOfflg = false;
+        bool CH2onOfflg = false;
         bool RS1state = true;
         bool RS2state = true;
         const int port = 5025;
@@ -52,12 +53,14 @@ namespace Power_Supply_DashBoard
         #region data acquisition
         private void Chart1Roll_Tick(object sender, EventArgs e)
         {
-            Task.Run(async () => {
+            Task.Run(async () =>
+            {
                 voltageCH1 = await _SCPI.getVoltage(CHANNELS.CH1);
                 currentCH1 = await _SCPI.getCurrent(CHANNELS.CH1);
 
                 GridlinesOffset++;
-                chart1.Invoke(new Action(() => {
+                chart1.Invoke(new Action(() =>
+                {
                     CH1vS.Text = Convert.ToString(voltageCH1);
                     CH1aS.Text = Convert.ToString(currentCH1);
                     chart1.Series["Voltage"].Points.AddY(Convert.ToDecimal(voltageCH1));//data point 
@@ -88,9 +91,10 @@ namespace Power_Supply_DashBoard
                 DISPLAYS d2 = await _SCPI.getDisplay(CHANNELS.CH2);
                 CONNECTION_MODE connectionMode = await _SCPI.getConnectionMode();
                 CHANNELS active = await _SCPI.getActiveChannel();
-                if(d1 == DISPLAYS.WAVEFORM)
+                if (d1 == DISPLAYS.WAVEFORM)
                 {
-                    WaveformCH1.Invoke(new Action(() => {
+                    WaveformCH1.Invoke(new Action(() =>
+                    {
                         WaveformCH1.Checked = true;
                     }));
                 }
@@ -177,11 +181,12 @@ namespace Power_Supply_DashBoard
                         }));
                         break;
                 }
-                
+
                 switch (active)
                 {
                     case CHANNELS.CH1:
-                        CH1activeRB.Invoke(new Action(() => {
+                        CH1activeRB.Invoke(new Action(() =>
+                        {
                             CH1activeRB.Checked = true;
                         }));
                         CH2activeRB.Invoke(new Action(() =>
@@ -191,7 +196,8 @@ namespace Power_Supply_DashBoard
                         break;
 
                     case CHANNELS.CH2:
-                        CH1activeRB.Invoke(new Action(() => {
+                        CH1activeRB.Invoke(new Action(() =>
+                        {
                             CH1activeRB.Checked = false;
                         }));
                         CH2activeRB.Invoke(new Action(() =>
@@ -201,10 +207,58 @@ namespace Power_Supply_DashBoard
                         break;
 
                     default:
-                        Console.WriteLine("ACTIVE CHANNEL FETCH FAILED");
+                        Debug.WriteLine("ACTIVE CHANNEL FETCH FAILED");
+                        break;
+                }
+
+
+                CHANNEL_MODE CH1outputMode = await _SCPI.getChannelMode(CHANNELS.CH1);
+                CHANNEL_MODE CH2outputMode = await _SCPI.getChannelMode(CHANNELS.CH2);
+                switch (CH1outputMode)
+                {
+                    case CHANNEL_MODE.CV:
+                        CH1cvRB.Invoke(new Action(() =>
+                        {
+                            CH1cvRB.Checked = true;
+                            CH1ccRB.Checked = false;
+                        }));
+                        break;
+
+                    case CHANNEL_MODE.CC:
+                        CH1cvRB.Invoke(new Action(() =>
+                        {
+                            CH1cvRB.Checked = false;
+                            CH1ccRB.Checked = true;
+                        }));
+                        break;
+                    default:
+                        Debug.WriteLine("CHANNEL CV/CC FETCH FAILED");
+                        break;
+                }
+
+                switch (CH2outputMode)
+                {
+                    case CHANNEL_MODE.CV:
+                        CH1cvRB.Invoke(new Action(() =>
+                        {
+                            CH2cvRB.Checked = true;
+                            CH2ccRB.Checked = false;
+                        }));
+                        break;
+
+                    case CHANNEL_MODE.CC:
+                        CH1cvRB.Invoke(new Action(() =>
+                        {
+                            CH2cvRB.Checked = false;
+                            CH2ccRB.Checked = true;
+                        }));
+                        break;
+                    default:
+                        Debug.WriteLine("CHANNEL CV/CC FETCH FAILED");
                         break;
                 }
             });
+                
         }//chart 1
 
 
@@ -299,17 +353,47 @@ namespace Power_Supply_DashBoard
         //########################################
         //Output Control functions.
         //########################################
-        private void CH1onOFF_CheckedChanged(object sender, EventArgs e)
+        private async void CH1onOFF_CheckedChanged(object sender, EventArgs e)
         {
-            if (CH1onOFF.Checked)
+            try
             {
-                CH1onOfflg = true;               
+                if (CH1onOFF.Checked)
+                {
+                    CH1onOfflg = true;
+                    await _SCPI.setChannelStatus(CHANNELS.CH1, SWITCH.ON);
+                }
+                else
+                {
+                    CH1onOfflg = false;
+                    await _SCPI.setChannelStatus(CHANNELS.CH1, SWITCH.OFF);
+                }
+                Debug.WriteLine(Convert.ToString(CH1onOFF.Checked));
             }
-            else
+            catch(Exception ex)
             {
-                CH1onOfflg = false;
+                MessageBox.Show(ex.Message);
             }
-            Debug.WriteLine(Convert.ToString(CH1onOFF.Checked)+ Convert.ToString(CH1onOfflg));
+        }
+        private async void CH2onOFF_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                if (CH2onOFF.Checked)
+                {
+                    CH2onOfflg = true;
+                    await _SCPI.setChannelStatus(CHANNELS.CH2, SWITCH.ON);
+                }
+                else
+                {
+                    CH2onOfflg = false;
+                    await _SCPI.setChannelStatus(CHANNELS.CH2, SWITCH.OFF);
+                }
+                Debug.WriteLine(Convert.ToString(CH1onOFF.Checked));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
         private void CH1set_Click(object sender, EventArgs e)
         {
