@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
@@ -254,12 +254,7 @@ namespace SPD3303X_E
             string ret = await telnetCommand("*IDN?", true);
             return ret;
         }
-	    
-	    
-	///<summary>
-        /// Gets the active channel of the instrument.
-        ///</summary>
-	    
+
         public async Task<CHANNELS> getActiveChannel()
         {
             string ret = await telnetCommand("INSTrument?", true);
@@ -292,6 +287,24 @@ namespace SPD3303X_E
         public async Task<double> getCurrent(CHANNELS channel)
         {
             double value = Double.Parse(await telnetCommand(returnChannel(channel) + ":CURRent?", true));
+            return value;
+        }
+
+        ///<summary>
+        /// Gets the Voltage output of channel
+        ///</summary>
+        public async Task<double> getOutputVoltage(CHANNELS channel)
+        {
+            double value = Double.Parse(await telnetCommand("MEASure:VOLTage? " + returnChannel(channel), true));
+            return value;
+        }
+
+        ///<summary>
+        /// Gets the current output of channel
+        ///</summary>
+        public async Task<double> getOutputCurrent(CHANNELS channel)
+        {
+            double value = Double.Parse(await telnetCommand("MEASure:CURRent? " + returnChannel(channel), true));
             return value;
         }
 
