@@ -291,6 +291,24 @@ namespace SPD3303X_E
         }
 
         ///<summary>
+        /// Gets the Voltage output of channel
+        ///</summary>
+        public async Task<double> getOutputVoltage(CHANNELS channel)
+        {
+            double value = Double.Parse(await telnetCommand("MEASure:VOLTage? " + returnChannel(channel), true));
+            return value;
+        }
+
+        ///<summary>
+        /// Gets the current output of channel
+        ///</summary>
+        public async Task<double> getOutputCurrent(CHANNELS channel)
+        {
+            double value = Double.Parse(await telnetCommand("MEASure:CURRent? " + returnChannel(channel), true));
+            return value;
+        }
+
+        ///<summary>
         /// Gets the Power reading from the ADC
         ///</summary>
         public async Task<double> getPower(CHANNELS channel)

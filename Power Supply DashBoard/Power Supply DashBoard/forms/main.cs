@@ -57,12 +57,16 @@ namespace Power_Supply_DashBoard
             {
                 voltageCH1 = await _SCPI.getVoltage(CHANNELS.CH1);
                 currentCH1 = await _SCPI.getCurrent(CHANNELS.CH1);
+                double voltageOutCH1 = await _SCPI.getOutputVoltage(CHANNELS.CH1);
+                double currentOutCH1 = await _SCPI.getOutputCurrent(CHANNELS.CH1);
 
                 GridlinesOffset++;
                 chart1.Invoke(new Action(() =>
                 {
                     CH1vS.Text = Convert.ToString(voltageCH1);
                     CH1aS.Text = Convert.ToString(currentCH1);
+                    CH1vO.Text = Convert.ToString(voltageOutCH1);
+                    CH1aO.Text = Convert.ToString(currentOutCH1);
                     chart1.Series["Voltage"].Points.AddY(Convert.ToDecimal(voltageCH1));//data point 
                     chart1.Series["Voltage"].Points.RemoveAt(0);
                     chart1.Series["current"].Points.AddY(Convert.ToDecimal(currentCH1));//data point 
@@ -74,10 +78,15 @@ namespace Power_Supply_DashBoard
                 }));
                 double voltageCH2 = await _SCPI.getVoltage(CHANNELS.CH2);
                 double currentCH2 = await _SCPI.getCurrent(CHANNELS.CH2);
+                double voltageOutCH2 = await _SCPI.getOutputVoltage(CHANNELS.CH2);
+                double currentOutCH2 = await _SCPI.getOutputCurrent(CHANNELS.CH2);
+
                 chart2.Invoke(new Action(() =>
                 {
                     CH2vS.Text = Convert.ToString(voltageCH2);
                     CH2aS.Text = Convert.ToString(currentCH2);
+                    CH2vO.Text = Convert.ToString(voltageOutCH2);
+                    CH2aO.Text = Convert.ToString(currentOutCH2);
                     chart2.Series["Voltage"].Points.AddY(Convert.ToDecimal(voltageCH2));//data point 
                     chart2.Series["Voltage"].Points.RemoveAt(0);
                     chart2.Series["current"].Points.AddY(Convert.ToDecimal(currentCH2));//data point 
@@ -353,41 +362,48 @@ namespace Power_Supply_DashBoard
         //########################################
         //Output Control functions.
         //########################################
-        private async void CH1onOFF_CheckedChanged(object sender, EventArgs e)
+        private void CH1onOFF_CheckedChanged(object sender, EventArgs e)
         {
             try
             {
-                if (CH1onOFF.Checked)
-                {
-                    CH1onOfflg = true;
-                    await _SCPI.setChannelStatus(CHANNELS.CH1, SWITCH.ON);
-                }
-                else
-                {
-                    CH1onOfflg = false;
-                    await _SCPI.setChannelStatus(CHANNELS.CH1, SWITCH.OFF);
-                }
-                Debug.WriteLine(Convert.ToString(CH1onOFF.Checked));
+                Task.Run(async () => {
+                    if (CH1onOFF.Checked)
+                    {
+
+                        CH1onOfflg = true;
+                        await _SCPI.setChannelStatus(CHANNELS.CH1, SWITCH.ON);
+                    }
+                    else
+                    {
+                        CH1onOfflg = false;
+                        await _SCPI.setChannelStatus(CHANNELS.CH1, SWITCH.OFF);
+                    }
+                    Debug.WriteLine(Convert.ToString(CH1onOFF.Checked));
+                });
+                
             }
             catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
-        private async void CH2onOFF_CheckedChanged(object sender, EventArgs e)
+        private void CH2onOFF_CheckedChanged(object sender, EventArgs e)
         {
             try
             {
-                if (CH2onOFF.Checked)
-                {
-                    CH2onOfflg = true;
-                    await _SCPI.setChannelStatus(CHANNELS.CH2, SWITCH.ON);
-                }
-                else
-                {
-                    CH2onOfflg = false;
-                    await _SCPI.setChannelStatus(CHANNELS.CH2, SWITCH.OFF);
-                }
+                Task.Run( async () => {
+                    if (CH2onOFF.Checked)
+                    {
+                        CH2onOfflg = true;
+                        await _SCPI.setChannelStatus(CHANNELS.CH2, SWITCH.ON);
+                    }
+                    else
+                    {
+                        CH2onOfflg = false;
+                        await _SCPI.setChannelStatus(CHANNELS.CH2, SWITCH.OFF);
+                    }
+                });
+                
                 Debug.WriteLine(Convert.ToString(CH1onOFF.Checked));
             }
             catch (Exception ex)
