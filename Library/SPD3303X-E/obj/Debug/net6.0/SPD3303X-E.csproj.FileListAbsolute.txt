@@ -1,0 +1,15 @@
+D:\OneDrive\projects\VisualStudio\Projects\PSU_lib\SPD3303X-E\SPD3303X-E\bin\Debug\net6.0\SPD3303X-E.exe
+D:\OneDrive\projects\VisualStudio\Projects\PSU_lib\SPD3303X-E\SPD3303X-E\bin\Debug\net6.0\SPD3303X-E.deps.json
+D:\OneDrive\projects\VisualStudio\Projects\PSU_lib\SPD3303X-E\SPD3303X-E\bin\Debug\net6.0\SPD3303X-E.runtimeconfig.json
+D:\OneDrive\projects\VisualStudio\Projects\PSU_lib\SPD3303X-E\SPD3303X-E\bin\Debug\net6.0\SPD3303X-E.dll
+D:\OneDrive\projects\VisualStudio\Projects\PSU_lib\SPD3303X-E\SPD3303X-E\bin\Debug\net6.0\SPD3303X-E.pdb
+D:\OneDrive\projects\VisualStudio\Projects\PSU_lib\SPD3303X-E\SPD3303X-E\obj\Debug\net6.0\SPD3303X-E.csproj.AssemblyReference.cache
+D:\OneDrive\projects\VisualStudio\Projects\PSU_lib\SPD3303X-E\SPD3303X-E\obj\Debug\net6.0\SPD3303X-E.GeneratedMSBuildEditorConfig.editorconfig
+D:\OneDrive\projects\VisualStudio\Projects\PSU_lib\SPD3303X-E\SPD3303X-E\obj\Debug\net6.0\SPD3303X-E.AssemblyInfoInputs.cache
+D:\OneDrive\projects\VisualStudio\Projects\PSU_lib\SPD3303X-E\SPD3303X-E\obj\Debug\net6.0\SPD3303X-E.AssemblyInfo.cs
+D:\OneDrive\projects\VisualStudio\Projects\PSU_lib\SPD3303X-E\SPD3303X-E\obj\Debug\net6.0\SPD3303X-E.csproj.CoreCompileInputs.cache
+D:\OneDrive\projects\VisualStudio\Projects\PSU_lib\SPD3303X-E\SPD3303X-E\obj\Debug\net6.0\SPD3303X-E.dll
+D:\OneDrive\projects\VisualStudio\Projects\PSU_lib\SPD3303X-E\SPD3303X-E\obj\Debug\net6.0\refint\SPD3303X-E.dll
+D:\OneDrive\projects\VisualStudio\Projects\PSU_lib\SPD3303X-E\SPD3303X-E\obj\Debug\net6.0\SPD3303X-E.pdb
+D:\OneDrive\projects\VisualStudio\Projects\PSU_lib\SPD3303X-E\SPD3303X-E\obj\Debug\net6.0\SPD3303X-E.genruntimeconfig.cache
+D:\OneDrive\projects\VisualStudio\Projects\PSU_lib\SPD3303X-E\SPD3303X-E\obj\Debug\net6.0\ref\SPD3303X-E.dll

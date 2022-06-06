@@ -18,22 +18,32 @@ namespace SPD3303X_E
     static class Program
     {
 
+
         static async Task Main()
         {
             SocketManagement management = new SocketManagement("192.168.0.106", 5025);
             management.connect();
             await test(management);
-         }
+
+
+        }
+
 
         async static Task test(SocketManagement m)
         {
             await Task.Run(async () =>
-            { await m.getIDN();
-                await m.setVoltage(CHANNELS.CH1,10.69);
-                await m.setCurrent(CHANNELS.CH1, 1.0);
-                await m.getVoltage(CHANNELS.CH1);
-                await m.getCurrent(CHANNELS.CH1);
-                await m.getPower(CHANNELS.CH1);
+            { //await m.getIDN();
+               
+                await m.setWaveformDisplay(CHANNELS.CH1, SWITCH.ON);
+                DISPLAYS s = await m.getDisplay(CHANNELS.CH1);
+                Console.WriteLine((int)s);
+                await m.setChannelStatus(CHANNELS.CH1, SWITCH.OFF);
+                SWITCH d = await m.getChannelStatus(CHANNELS.CH1);
+                Console.WriteLine(d);
+                await m.setChannelStatus(CHANNELS.CH1, SWITCH.ON);
+                d = await m.getChannelStatus(CHANNELS.CH1);
+                Console.WriteLine(d);
+
             }
             );
         } 
