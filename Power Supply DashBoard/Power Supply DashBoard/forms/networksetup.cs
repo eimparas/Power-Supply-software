@@ -11,8 +11,11 @@ using SPD3303X_E;
 
 namespace Power_Supply_DashBoard
 {
+    
     public partial class networksetup : Form
     {
+        double voltageCH1 = 0.0;
+        double currentCH1 = 0.0;
         public networksetup()
         {
             InitializeComponent();
@@ -48,8 +51,8 @@ namespace Power_Supply_DashBoard
             string _ip = ip1.Text + '.' + ip2.Text+'.'+ ip3.Text+ip4.Text;
             try
             {
-                main._SCPI = new SocketManagement(_ip, 5025);
-                main._SCPI.connect();
+                 main._SCPI = new SocketManagement(_ip, 5025);
+                 main._SCPI.connect();
                 main.Chart1Timer.Start();
             }
             catch (Exception ex)
