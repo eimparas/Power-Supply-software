@@ -46,12 +46,18 @@ namespace Power_Supply_DashBoard
                 chart2.Series["Voltage"].Points.AddY(0);
                 chart2.Series["current"].Points.AddY(0);
             }//chart Y axis setup
+
+            //########################################
+            //data acquisition 
+            //########################################
+            #region data acquisition
             t = new Thread(new ThreadStart(() =>
             {
                 while (true)
                 {
                     if (_SCPI != null)
                     {
+                        Debug.WriteLine("living");
                         voltageCH1 = _SCPI.getVoltage(CHANNELS.CH1);
                         currentCH1 = _SCPI.getCurrent(CHANNELS.CH1);
                         double voltageOutCH1 = _SCPI.getOutputVoltage(CHANNELS.CH1);
@@ -63,9 +69,9 @@ namespace Power_Supply_DashBoard
                             CH1aS.Text = Convert.ToString(currentCH1);
                             CH1vO.Text = Convert.ToString(voltageOutCH1);
                             CH1aO.Text = Convert.ToString(currentOutCH1);
-                            chart1.Series["Voltage"].Points.AddY(Convert.ToDecimal(voltageCH1));//data point 
+                            chart1.Series["Voltage"].Points.AddY(Convert.ToDecimal(voltageOutCH1));//data point 
                             chart1.Series["Voltage"].Points.RemoveAt(0);
-                            chart1.Series["current"].Points.AddY(Convert.ToDecimal(currentCH1));//data point 
+                            chart1.Series["current"].Points.AddY(Convert.ToDecimal(currentOutCH1));//data point 
                             chart1.Series["current"].Points.RemoveAt(0);
                             chart1.ChartAreas[0].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
                             chart1.ChartAreas[1].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
@@ -98,91 +104,91 @@ namespace Power_Supply_DashBoard
                         CHANNELS active = _SCPI.getActiveChannel();
                         if (d1 == DISPLAYS.WAVEFORM)
                         {
-                            WaveformCH1.Invoke(new Action(() =>
+                            WaveformCH1s.Invoke(new Action(() =>
                             {
-                                WaveformCH1.Checked = true;
+                                WaveformCH1s.Checked = true;
                             }));
                         }
                         else
                         {
-                            WaveformCH1.Invoke(new Action(() =>
+                            WaveformCH1s.Invoke(new Action(() =>
                             {
-                                WaveformCH1.Checked = false;
+                                WaveformCH1s.Checked = false;
                             }));
                         }
                         if (d2 == DISPLAYS.WAVEFORM)
                         {
-                            WaveformCH2.Invoke(new Action(() =>
+                            WaveformCH2s.Invoke(new Action(() =>
                             {
-                                WaveformCH2.Checked = true;
+                                WaveformCH2s.Checked = true;
                             }));
                         }
                         else
                         {
-                            WaveformCH2.Invoke(new Action(() =>
+                            WaveformCH2s.Invoke(new Action(() =>
                             {
-                                WaveformCH2.Checked = false;
+                                WaveformCH2s.Checked = false;
                             }));
                         }
                         switch (connectionMode)
                         {
                             case CONNECTION_MODE.SERIES:
-                                Ser_radioButton.Invoke(new Action(() =>
+                                ser_RBs.Invoke(new Action(() =>
                                 {
-                                    Ser_radioButton.Checked = true;
+                                    ser_RBs.Checked = true;
                                 }));
-                                Int_RadioButton.Invoke(new Action(() =>
+                                Int_RBs.Invoke(new Action(() =>
                                 {
-                                    Int_RadioButton.Checked = false;
+                                    Int_RBs.Checked = false;
                                 }));
-                                Par_RB.Invoke(new Action(() =>
+                                Par_RBs.Invoke(new Action(() =>
                                 {
-                                    Par_RB.Checked = false;
+                                    Par_RBs.Checked = false;
                                 }));
                                 break;
 
                             case CONNECTION_MODE.PARALLEL:
-                                Ser_radioButton.Invoke(new Action(() =>
+                                ser_RBs.Invoke(new Action(() =>
                                 {
-                                    Ser_radioButton.Checked = false;
+                                    ser_RBs.Checked = false;
                                 }));
-                                Int_RadioButton.Invoke(new Action(() =>
+                                Int_RBs.Invoke(new Action(() =>
                                 {
-                                    Int_RadioButton.Checked = false;
+                                   Int_RBs.Checked = false;
                                 }));
-                                Par_RB.Invoke(new Action(() =>
+                                Par_RBs.Invoke(new Action(() =>
                                 {
-                                    Par_RB.Checked = true;
+                                    Par_RBs.Checked = true;
                                 }));
                                 break;
 
                             case CONNECTION_MODE.INDEPENDENT:
-                                Ser_radioButton.Invoke(new Action(() =>
+                                ser_RBs.Invoke(new Action(() =>
                                 {
-                                    Ser_radioButton.Checked = false;
+                                    ser_RBs.Checked = false;
                                 }));
-                                Int_RadioButton.Invoke(new Action(() =>
+                                Int_RBs.Invoke(new Action(() =>
                                 {
-                                    Int_RadioButton.Checked = true;
+                                    Int_RBs.Checked = true;
                                 }));
-                                Par_RB.Invoke(new Action(() =>
+                                Par_RBs.Invoke(new Action(() =>
                                 {
-                                    Par_RB.Checked = false;
+                                    Par_RBs.Checked = false;
                                 }));
                                 break;
 
                             default:
-                                Ser_radioButton.Invoke(new Action(() =>
+                                ser_RBs.Invoke(new Action(() =>
                                 {
-                                    Ser_radioButton.Checked = false;
+                                    ser_RBs.Checked = false;
                                 }));
-                                Int_RadioButton.Invoke(new Action(() =>
+                                Int_RBs.Invoke(new Action(() =>
                                 {
-                                    Int_RadioButton.Checked = false;
+                                    Int_RBs.Checked = false;
                                 }));
-                                Par_RB.Invoke(new Action(() =>
+                                Par_RBs.Invoke(new Action(() =>
                                 {
-                                    Par_RB.Checked = false;
+                                    Par_RBs.Checked = false;
                                 }));
                                 break;
                         }
@@ -271,16 +277,10 @@ namespace Power_Supply_DashBoard
                 }
             }));
             t.Start();
+            #endregion
         }
 
-        public void updateData() {
-            
-        }
 
-        //########################################
-        //data acquisition timer(s)
-        //########################################
-        #region data acquisition
         private void Chart1Roll_Tick(object sender, EventArgs e)
         {
           
@@ -292,7 +292,7 @@ namespace Power_Supply_DashBoard
         {
             
         }//chart 2      
-        #endregion
+        
         private void RUN_STP_1_CheckedChanged(object sender, EventArgs e)
         {
             RS1state = RUN_STP_1.Checked;
@@ -342,7 +342,7 @@ namespace Power_Supply_DashBoard
 
         private void M2_Click(object sender, EventArgs e)
         {
-           
+            tabControl1.SelectedIndex = 1;
         }
 
         //###################################################################
@@ -353,6 +353,7 @@ namespace Power_Supply_DashBoard
             if (Int_RadioButton.Checked)
             {
                 Debug.WriteLine("int");
+                _SCPI.setChannelConnection(CONNECTION_MODE.INDEPENDENT);
                
             }
         }
@@ -362,7 +363,7 @@ namespace Power_Supply_DashBoard
             if (Ser_radioButton.Checked)
             {
                 Debug.WriteLine("ser");
-                
+                _SCPI.setChannelConnection(CONNECTION_MODE.SERIES);
             }
 
         }
@@ -372,6 +373,7 @@ namespace Power_Supply_DashBoard
             if (Par_RB.Checked)
             {
                 Debug.WriteLine("par");
+                _SCPI.setChannelConnection(CONNECTION_MODE.PARALLEL);
                
             }
         }
@@ -387,12 +389,12 @@ namespace Power_Supply_DashBoard
                     if (CH1onOFF.Checked)
                     {
 
-                        CH1onOfflg = true;
+                       // CH1onOfflg = true;
                         await _SCPI.setChannelStatus(CHANNELS.CH1, SWITCH.ON);
                     }
                     else
                     {
-                        CH1onOfflg = false;
+                        //CH1onOfflg = false;
                         await _SCPI.setChannelStatus(CHANNELS.CH1, SWITCH.OFF);
                     }
                     Debug.WriteLine(Convert.ToString(CH1onOFF.Checked));
@@ -411,12 +413,12 @@ namespace Power_Supply_DashBoard
                 Task.Run( async () => {
                     if (CH2onOFF.Checked)
                     {
-                        CH2onOfflg = true;
+                       // CH2onOfflg = true;
                         await _SCPI.setChannelStatus(CHANNELS.CH2, SWITCH.ON);
                     }
                     else
                     {
-                        CH2onOfflg = false;
+                       // CH2onOfflg = false;
                         await _SCPI.setChannelStatus(CHANNELS.CH2, SWITCH.OFF);
                     }
                 });
@@ -428,9 +430,47 @@ namespace Power_Supply_DashBoard
                 MessageBox.Show(ex.Message);
             }
         }
-        private void CH1set_Click(object sender, EventArgs e)
+
+
+        private void CH3onOFF_CheckedChanged(object sender, EventArgs e)
         {
-            
+            try
+            {
+                Task.Run(async () => {
+                    if (CH3onOFF.Checked)
+                    {
+
+                        //CH3onOfflg = true;
+                        await _SCPI.setChannelStatus(CHANNELS.CH3, SWITCH.ON);
+                    }
+                    else
+                    {
+                        //CH3onOfflg = false;
+                        await _SCPI.setChannelStatus(CHANNELS.CH3, SWITCH.OFF);
+                    }
+                    Debug.WriteLine(Convert.ToString(CH1onOFF.Checked));
+                });
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+        private async void CH1set_Click(object sender, EventArgs e)
+        {
+            if(CH1vText.Text.Length > 0)
+            {
+                try
+                {
+                    await _SCPI.setVoltage(CHANNELS.CH1, Double.Parse(CH1vText.Text));
+   
+                }
+                catch (FormatException)
+                {
+                    Debug.WriteLine("An idiot entered invalid input CH1");
+                }
+            }
         }
 
 
@@ -444,7 +484,7 @@ namespace Power_Supply_DashBoard
         {
             SCPI_terminal SCPI_TER = new SCPI_terminal();
             SCPI_TER.Show();
-        }//π
+        }
         private void NetworkSetingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             networksetup netset = new networksetup();
@@ -460,10 +500,89 @@ namespace Power_Supply_DashBoard
             About _about = new About();
             _about.ShowDialog();
         }
+        private void DatalogingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            chart chartdialog = new chart();
+            chartdialog.Show();
+        }
+        #endregion
 
-        private void main_Load(object sender, EventArgs e)
+
+        private async void WaveformCH1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (WaveformCH1.Checked)
+            {
+                _SCPI.setWaveformDisplay(CHANNELS.CH1, SWITCH.ON);
+            }
+            else
+            {
+                _SCPI.setWaveformDisplay(CHANNELS.CH1, SWITCH.OFF);
+            }
+        }
+
+        private async void WaveformCH2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (WaveformCH2.Checked)
+            {
+                _SCPI.setWaveformDisplay(CHANNELS.CH2, SWITCH.ON);
+            }
+            else
+            {
+                _SCPI.setWaveformDisplay(CHANNELS.CH2, SWITCH.OFF);
+            }
+        }
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private async void CH2set_Click(object sender, EventArgs e)
+        {
+            if (CH2vText.Text.Length > 0)
+            {
+                try
+                {
+                    
+                    await _SCPI.setVoltage(CHANNELS.CH2, Double.Parse(CH2vText.Text));
+               
+                }
+                catch (FormatException)
+                {
+                    Debug.WriteLine("An idiot entered invalid input CH2");
+                }
+            }
+        }
+
+        private async void CH1setC_Click(object sender, EventArgs e)
+        {
+            if (CH1aText.Text.Length > 0)
+            {
+                try
+                {
+                    await _SCPI.setCurrent(CHANNELS.CH1, Double.Parse(CH1aText.Text));
+
+                }
+                catch (FormatException)
+                {
+                    Debug.WriteLine("An idiot entered invalid input CH1");
+                }
+            }
+        }
+
+        private async void CH2setC_Click(object sender, EventArgs e)
+        {
+            if (CH2aText.Text.Length > 0)
+            {
+                try
+                {
+                    await _SCPI.setCurrent(CHANNELS.CH2, Double.Parse(CH2aText.Text));
+
+                }
+                catch (FormatException)
+                {
+                    Debug.WriteLine("An idiot entered invalid input CH1");
+                }
+            }
         }
 
         private void main_Closing(object sender, FormClosingEventArgs e)
@@ -471,14 +590,5 @@ namespace Power_Supply_DashBoard
             Debug.WriteLine("closing");
             t.Abort();
         }
-
-        private void DatalogingToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            chart chartdialog = new chart();
-            chartdialog.Show();
-        }
-
-
-        #endregion
     }
 }

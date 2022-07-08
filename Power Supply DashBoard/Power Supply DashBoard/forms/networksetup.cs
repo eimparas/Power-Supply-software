@@ -53,7 +53,7 @@ namespace Power_Supply_DashBoard
             {
                  main._SCPI = new SocketManagement(_ip, 5025);
                  main._SCPI.connect();
-                main.Chart1Timer.Start();
+                 main.Chart1Timer.Start();                                  
             }
             catch (Exception ex)
             {
