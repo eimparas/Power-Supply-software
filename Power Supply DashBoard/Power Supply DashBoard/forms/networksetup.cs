@@ -52,8 +52,7 @@ namespace Power_Supply_DashBoard
             try
             {
                  main._SCPI = new SocketManagement(_ip, 5025);
-                 main._SCPI.connect();
-                 main.Chart1Timer.Start();                                  
+                 main._SCPI.connect();                                  
             }
             catch (Exception ex)
             {
@@ -82,6 +81,11 @@ namespace Power_Supply_DashBoard
             {
                 Connect();
             }
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            
         }
     }
 }

@@ -28,17 +28,15 @@ namespace Power_Supply_DashBoard
         bool RS2state = true;
         const int port = 5025;
         byte[] bytes = new byte[1024];
-        public static SocketManagement _SCPI;
-        public static Timer Chart1Timer, Chart2Timer;
+        public static SocketManagement _SCPI;       
         double voltageCH1 = 0.0;
-        double currentCH1 = 0;
+        double currentCH1 = 0.0;
+        double powerCH1 = 0.0;
         Thread t;
 
         public main()
         {
             InitializeComponent();
-            Chart1Timer = Chart1Roll;
-            Chart2Timer = Chart2Roll;
             for (int i = 0; i < 60; i++)
             {
                 chart1.Series["Voltage"].Points.AddY(0);
@@ -60,6 +58,7 @@ namespace Power_Supply_DashBoard
                         Debug.WriteLine("living");
                         voltageCH1 = _SCPI.getVoltage(CHANNELS.CH1);
                         currentCH1 = _SCPI.getCurrent(CHANNELS.CH1);
+                        powerCH1 = _SCPI.getPower(CHANNELS.CH1);
                         double voltageOutCH1 = _SCPI.getOutputVoltage(CHANNELS.CH1);
                         double currentOutCH1 = _SCPI.getOutputCurrent(CHANNELS.CH1);
                         GridlinesOffset++;
@@ -89,9 +88,9 @@ namespace Power_Supply_DashBoard
                             CH2aS.Text = Convert.ToString(currentCH2);
                             CH2vO.Text = Convert.ToString(voltageOutCH2);
                             CH2aO.Text = Convert.ToString(currentOutCH2);
-                            chart2.Series["Voltage"].Points.AddY(Convert.ToDecimal(voltageCH2));//data point 
+                            chart2.Series["Voltage"].Points.AddY(Convert.ToDecimal(voltageOutCH2));//data point 
                             chart2.Series["Voltage"].Points.RemoveAt(0);
-                            chart2.Series["current"].Points.AddY(Convert.ToDecimal(currentCH2));//data point 
+                            chart2.Series["current"].Points.AddY(Convert.ToDecimal(currentOutCH2));//data point 
                             chart2.Series["current"].Points.RemoveAt(0);
                             chart2.ChartAreas[0].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
                             chart2.ChartAreas[1].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
@@ -279,46 +278,6 @@ namespace Power_Supply_DashBoard
             t.Start();
             #endregion
         }
-
-
-        private void Chart1Roll_Tick(object sender, EventArgs e)
-        {
-          
-                
-        }//chart 1
-
-
-        private void Chart2Roll_Tick(object sender, EventArgs e)
-        {
-            
-        }//chart 2      
-        
-        private void RUN_STP_1_CheckedChanged(object sender, EventArgs e)
-        {
-            RS1state = RUN_STP_1.Checked;
-            if(RS1state== true)
-            {
-                Chart1Roll.Start();
-                
-            }else
-            {
-                Chart1Roll.Stop();
-            }
-        }
-
-        private void RUN_STP_2_CheckedChanged(object sender, EventArgs e)
-        {
-            RS2state = RUN_STP_2.Checked;  
-            if (RS2state == true)
-            {
-                Chart2Roll.Start();
-
-            }else
-            {
-                Chart2Roll.Stop();
-            }
-        }
-
         //########################################
         //Instrument Memories control functions.
         //########################################
@@ -368,7 +327,7 @@ namespace Power_Supply_DashBoard
 
         }
 
-        private void Par_radioButton_CheckedChanged(object sender, EventArgs e)
+        private void  Par_radioButton_CheckedChanged(object sender, EventArgs e)
         {
             if (Par_RB.Checked)
             {
@@ -488,6 +447,7 @@ namespace Power_Supply_DashBoard
         private void NetworkSetingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             networksetup netset = new networksetup();
+            netset.StartPosition = FormStartPosition.CenterParent;
             netset.ShowDialog();
         }
         private void InstrumentToolStripMenuItem_Click(object sender, EventArgs e)
@@ -498,6 +458,7 @@ namespace Power_Supply_DashBoard
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             About _about = new About();
+            _about.StartPosition = FormStartPosition.CenterParent;
             _about.ShowDialog();
         }
         private void DatalogingToolStripMenuItem_Click(object sender, EventArgs e)
@@ -583,6 +544,11 @@ namespace Power_Supply_DashBoard
                     Debug.WriteLine("An idiot entered invalid input CH1");
                 }
             }
+        }
+
+        private void groupBox4_Enter(object sender, EventArgs e)
+        {
+
         }
 
         private void main_Closing(object sender, FormClosingEventArgs e)
