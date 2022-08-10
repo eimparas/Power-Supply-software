@@ -52,7 +52,7 @@ namespace Power_Supply_DashBoard
             try
             {
                  main._SCPI = new SocketManagement(_ip, 5025);
-                 main._SCPI.connect();                                  
+                 main._SCPI.connect();
             }
             catch (Exception ex)
             {

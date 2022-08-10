@@ -298,7 +298,6 @@
             this.WaveformCH2s.TabIndex = 1;
             this.WaveformCH2s.Text = "WaveformCH2";
             this.WaveformCH2s.UseVisualStyleBackColor = true;
-            this.WaveformCH2s.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // WaveformCH1s
             // 
@@ -589,7 +588,6 @@
             this.groupBox4.TabIndex = 24;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "CH2";
-            this.groupBox4.Enter += new System.EventHandler(this.groupBox4_Enter);
             // 
             // groupBox10
             // 

@@ -32,6 +32,14 @@ namespace Power_Supply_DashBoard
         double voltageCH1 = 0.0;
         double currentCH1 = 0.0;
         double powerCH1 = 0.0;
+        double voltageOutCH1 = 0.0;
+        double currentOutCH1 = 0.0;
+        double voltageCH2 = 0.0;
+        double currentCH2= 0.0;
+        double voltageOutCH2= 0.0;
+        double currentOutCH2= 0.0;
+        double powerCH2 = 0.0;
+
         Thread t;
 
         public main()
@@ -44,7 +52,7 @@ namespace Power_Supply_DashBoard
                 chart2.Series["Voltage"].Points.AddY(0);
                 chart2.Series["current"].Points.AddY(0);
             }//chart Y axis setup
-
+            
             //########################################
             //data acquisition 
             //########################################
@@ -56,11 +64,37 @@ namespace Power_Supply_DashBoard
                     if (_SCPI != null)
                     {
                         Debug.WriteLine("living");
+                        //########################################
+                        //Voltage Current parameters from instrument
+                        //########################################
+                        #region ADC_reading
                         voltageCH1 = _SCPI.getVoltage(CHANNELS.CH1);
-                        currentCH1 = _SCPI.getCurrent(CHANNELS.CH1);
-                        powerCH1 = _SCPI.getPower(CHANNELS.CH1);
-                        double voltageOutCH1 = _SCPI.getOutputVoltage(CHANNELS.CH1);
-                        double currentOutCH1 = _SCPI.getOutputCurrent(CHANNELS.CH1);
+                        currentCH1 = _SCPI.getCurrent(CHANNELS.CH1);//Voltage/Current Setpoint
+                        voltageOutCH1 = _SCPI.getOutputVoltage(CHANNELS.CH1);
+                        currentOutCH1 = _SCPI.getOutputCurrent(CHANNELS.CH1);
+                        powerCH1 = _SCPI.getOutputPower(CHANNELS.CH1);//MEasUreed Voltage/Current/Power from ADC
+
+                        voltageCH2 = _SCPI.getVoltage(CHANNELS.CH2);
+                        currentCH2 = _SCPI.getCurrent(CHANNELS.CH2);//Voltage/Current Setpoint
+                        voltageOutCH2 = _SCPI.getOutputVoltage(CHANNELS.CH2);
+                        currentOutCH2 = _SCPI.getOutputCurrent(CHANNELS.CH2);
+                        powerCH2 = _SCPI.getOutputPower(CHANNELS.CH2);//MEasUreed Voltage/Current/power from ADC
+                        #endregion
+
+                        #region Status
+                        CHANNEL_MODE CH1outputMode = _SCPI.getChannelMode(CHANNELS.CH1);
+                        CHANNEL_MODE CH2outputMode = _SCPI.getChannelMode(CHANNELS.CH2);//CV-CC
+                        DISPLAYS d1 = _SCPI.getDisplay(CHANNELS.CH1);
+                        DISPLAYS d2 = _SCPI.getDisplay(CHANNELS.CH2);//Num-Waveform
+                        CONNECTION_MODE connectionMode = _SCPI.getConnectionMode();//Serial-Parallel
+                        CHANNELS active = _SCPI.getActiveChannel();
+                        
+                        //Missing CH out on off & TImer on off 
+                        #endregion
+
+                        //###########
+                        //GUI Writes
+                        //###########
                         GridlinesOffset++;
                         chart1.Invoke(new Action(() =>
                         {
@@ -77,11 +111,7 @@ namespace Power_Supply_DashBoard
                             GridlinesOffset %= (int)chart1.ChartAreas[0].AxisX.MajorGrid.Interval;
                             GridlinesOffset %= (int)chart1.ChartAreas[1].AxisX.MajorGrid.Interval;
                         }));
-                        double voltageCH2 = _SCPI.getVoltage(CHANNELS.CH2);
-                        double currentCH2 = _SCPI.getCurrent(CHANNELS.CH2);
-                        double voltageOutCH2 = _SCPI.getOutputVoltage(CHANNELS.CH2);
-                        double currentOutCH2 = _SCPI.getOutputCurrent(CHANNELS.CH2);
-
+                        
                         chart2.Invoke(new Action(() =>
                         {
                             CH2vS.Text = Convert.ToString(voltageCH2);
@@ -96,11 +126,9 @@ namespace Power_Supply_DashBoard
                             chart2.ChartAreas[1].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
                             GridlinesOffset %= (int)chart2.ChartAreas[0].AxisX.MajorGrid.Interval;
                             GridlinesOffset %= (int)chart2.ChartAreas[1].AxisX.MajorGrid.Interval;
-                        }));
-                        DISPLAYS d1 = _SCPI.getDisplay(CHANNELS.CH1);
-                        DISPLAYS d2 = _SCPI.getDisplay(CHANNELS.CH2);
-                        CONNECTION_MODE connectionMode = _SCPI.getConnectionMode();
-                        CHANNELS active = _SCPI.getActiveChannel();
+                        }));                      
+                        
+                        
                         if (d1 == DISPLAYS.WAVEFORM)
                         {
                             WaveformCH1s.Invoke(new Action(() =>
@@ -220,10 +248,7 @@ namespace Power_Supply_DashBoard
                                 Debug.WriteLine("ACTIVE CHANNEL FETCH FAILED");
                                 break;
                         }
-
-
-                        CHANNEL_MODE CH1outputMode = _SCPI.getChannelMode(CHANNELS.CH1);
-                        CHANNEL_MODE CH2outputMode = _SCPI.getChannelMode(CHANNELS.CH2);
+                        
                         switch (CH1outputMode)
                         {
                             case CHANNEL_MODE.CV:
@@ -276,11 +301,14 @@ namespace Power_Supply_DashBoard
                 }
             }));
             t.Start();
-            #endregion
+            
         }
+        #endregion
+
         //########################################
         //Instrument Memories control functions.
         //########################################
+        #region Memories
         private void M1_Click(object sender, EventArgs e)
         {
             if (mem_save_check.Checked == true)
@@ -298,15 +326,17 @@ namespace Power_Supply_DashBoard
                 Debug.WriteLine("send memory to psu");
             }
         }
-
+        
         private void M2_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedIndex = 1;
         }
+        #endregion
 
         //###################################################################
         //Output Track mode control functions. {Independent/Parallel/Series}
         //###################################################################
+        #region OutTrackMode
         private void Int_radioButton_CheckedChanged(object sender, EventArgs e)
         {
             if (Int_RadioButton.Checked)
@@ -336,10 +366,12 @@ namespace Power_Supply_DashBoard
                
             }
         }
+        #endregion
 
         //########################################
         //Output Control functions.
         //########################################
+        #region OutControl
         private void CH1onOFF_CheckedChanged(object sender, EventArgs e)
         {
             try
@@ -416,6 +448,8 @@ namespace Power_Supply_DashBoard
                 MessageBox.Show(ex.Message);
             }
         }
+
+        //Sets CH1 Voltage
         private async void CH1set_Click(object sender, EventArgs e)
         {
             if(CH1vText.Text.Length > 0)
@@ -431,13 +465,63 @@ namespace Power_Supply_DashBoard
                 }
             }
         }
+        //Sets CH2 Voltage
+        private async void CH2set_Click(object sender, EventArgs e)
+        {
+            if (CH2vText.Text.Length > 0)
+            {
+                try
+                {
 
+                    await _SCPI.setVoltage(CHANNELS.CH2, Double.Parse(CH2vText.Text));
 
+                }
+                catch (FormatException)
+                {
+                    Debug.WriteLine("An idiot entered invalid input CH2");
+                }
+            }
+        }
+
+        //Sets CH1 Current
+        private async void CH1setC_Click(object sender, EventArgs e)
+        {
+            if (CH1aText.Text.Length > 0)
+            {
+                try
+                {
+                    await _SCPI.setCurrent(CHANNELS.CH1, Double.Parse(CH1aText.Text));
+
+                }
+                catch (FormatException)
+                {
+                    Debug.WriteLine("An idiot entered invalid input CH1");
+                }
+            }
+        }
+
+        //Sets CH2 Current
+        private async void CH2setC_Click(object sender, EventArgs e)
+        {
+            if (CH2aText.Text.Length > 0)
+            {
+                try
+                {
+                    await _SCPI.setCurrent(CHANNELS.CH2, Double.Parse(CH2aText.Text));
+
+                }
+                catch (FormatException)
+                {
+                    Debug.WriteLine("An idiot entered invalid input CH1");
+                }
+            }
+        }
+
+        #endregion
 
         //########################################
         //ToolStrip Items "logic" functions.
         //########################################
-
         # region ToolStrip Items "logic" functions.
         private void terminalToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -468,6 +552,10 @@ namespace Power_Supply_DashBoard
         }
         #endregion
 
+        //########################################
+        // Front Pannel Control
+        //########################################
+        #region FrontPannelControl
 
         private async void WaveformCH1_CheckedChanged(object sender, EventArgs e)
         {
@@ -492,64 +580,7 @@ namespace Power_Supply_DashBoard
                 _SCPI.setWaveformDisplay(CHANNELS.CH2, SWITCH.OFF);
             }
         }
-        private void checkBox2_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private async void CH2set_Click(object sender, EventArgs e)
-        {
-            if (CH2vText.Text.Length > 0)
-            {
-                try
-                {
-                    
-                    await _SCPI.setVoltage(CHANNELS.CH2, Double.Parse(CH2vText.Text));
-               
-                }
-                catch (FormatException)
-                {
-                    Debug.WriteLine("An idiot entered invalid input CH2");
-                }
-            }
-        }
-
-        private async void CH1setC_Click(object sender, EventArgs e)
-        {
-            if (CH1aText.Text.Length > 0)
-            {
-                try
-                {
-                    await _SCPI.setCurrent(CHANNELS.CH1, Double.Parse(CH1aText.Text));
-
-                }
-                catch (FormatException)
-                {
-                    Debug.WriteLine("An idiot entered invalid input CH1");
-                }
-            }
-        }
-
-        private async void CH2setC_Click(object sender, EventArgs e)
-        {
-            if (CH2aText.Text.Length > 0)
-            {
-                try
-                {
-                    await _SCPI.setCurrent(CHANNELS.CH2, Double.Parse(CH2aText.Text));
-
-                }
-                catch (FormatException)
-                {
-                    Debug.WriteLine("An idiot entered invalid input CH1");
-                }
-            }
-        }
-
-        private void groupBox4_Enter(object sender, EventArgs e)
-        {
-
-        }
+        #endregion   
 
         private void main_Closing(object sender, FormClosingEventArgs e)
         {

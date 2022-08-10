@@ -329,7 +329,7 @@ namespace SPD3303X_E
         ///<summary>
         /// Gets the Power reading from the ADC
         ///</summary>
-        public double getPower(CHANNELS channel)
+        public double getOutputPower(CHANNELS channel)
         {
             double value = Double.Parse(send("MEASure:POWEr? " + returnChannel(channel)));
             return value;
