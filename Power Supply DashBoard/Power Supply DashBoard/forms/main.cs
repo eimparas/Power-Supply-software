@@ -28,19 +28,20 @@ namespace Power_Supply_DashBoard
         bool RS2state = true;
         const int port = 5025;
         byte[] bytes = new byte[1024];
-        public static SocketManagement _SCPI;       
+        public static SocketManagement _SCPI;
         double voltageCH1 = 0.0;
         double currentCH1 = 0.0;
         double powerCH1 = 0.0;
         double voltageOutCH1 = 0.0;
         double currentOutCH1 = 0.0;
         double voltageCH2 = 0.0;
-        double currentCH2= 0.0;
-        double voltageOutCH2= 0.0;
-        double currentOutCH2= 0.0;
+        double currentCH2 = 0.0;
+        double voltageOutCH2 = 0.0;
+        double currentOutCH2 = 0.0;
         double powerCH2 = 0.0;
 
         Thread t;
+        SaveFileDialog saveFileDialog1 = new SaveFileDialog();
 
         public main()
         {
@@ -52,7 +53,10 @@ namespace Power_Supply_DashBoard
                 chart2.Series["Voltage"].Points.AddY(0);
                 chart2.Series["current"].Points.AddY(0);
             }//chart Y axis setup
-            
+
+            saveFileDialog1.Filter = "A bitmap (BMP) image format.|*.bmp|Joint Photographic Experts Group(.jpg)|*.jpg";
+            saveFileDialog1.Title = "Where to save this chart?";
+
             //########################################
             //data acquisition 
             //########################################
@@ -88,7 +92,7 @@ namespace Power_Supply_DashBoard
                         DISPLAYS d2 = _SCPI.getDisplay(CHANNELS.CH2);//Num-Waveform
                         CONNECTION_MODE connectionMode = _SCPI.getConnectionMode();//Serial-Parallel
                         CHANNELS active = _SCPI.getActiveChannel();
-                        
+
                         //Missing CH out on off & TImer on off 
                         #endregion
 
@@ -96,10 +100,11 @@ namespace Power_Supply_DashBoard
                         //GUI Writes
                         //###########
                         GridlinesOffset++;
-                        chart1.Invoke(new Action(() =>
+                        chart1.Invoke(new Action(() =>//Charts
                         {
                             CH1vS.Text = Convert.ToString(voltageCH1);
                             CH1aS.Text = Convert.ToString(currentCH1);
+                            CH1wS.Text = Convert.ToString(powerCH1);
                             CH1vO.Text = Convert.ToString(voltageOutCH1);
                             CH1aO.Text = Convert.ToString(currentOutCH1);
                             chart1.Series["Voltage"].Points.AddY(Convert.ToDecimal(voltageOutCH1));//data point 
@@ -111,11 +116,12 @@ namespace Power_Supply_DashBoard
                             GridlinesOffset %= (int)chart1.ChartAreas[0].AxisX.MajorGrid.Interval;
                             GridlinesOffset %= (int)chart1.ChartAreas[1].AxisX.MajorGrid.Interval;
                         }));
-                        
+
                         chart2.Invoke(new Action(() =>
                         {
                             CH2vS.Text = Convert.ToString(voltageCH2);
                             CH2aS.Text = Convert.ToString(currentCH2);
+                            CH2wS.Text = Convert.ToString(powerCH2);
                             CH2vO.Text = Convert.ToString(voltageOutCH2);
                             CH2aO.Text = Convert.ToString(currentOutCH2);
                             chart2.Series["Voltage"].Points.AddY(Convert.ToDecimal(voltageOutCH2));//data point 
@@ -126,9 +132,9 @@ namespace Power_Supply_DashBoard
                             chart2.ChartAreas[1].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
                             GridlinesOffset %= (int)chart2.ChartAreas[0].AxisX.MajorGrid.Interval;
                             GridlinesOffset %= (int)chart2.ChartAreas[1].AxisX.MajorGrid.Interval;
-                        }));                      
-                        
-                        
+                        }));
+
+                        //CheckBoxes RadioButtons  
                         if (d1 == DISPLAYS.WAVEFORM)
                         {
                             WaveformCH1s.Invoke(new Action(() =>
@@ -181,7 +187,7 @@ namespace Power_Supply_DashBoard
                                 }));
                                 Int_RBs.Invoke(new Action(() =>
                                 {
-                                   Int_RBs.Checked = false;
+                                    Int_RBs.Checked = false;
                                 }));
                                 Par_RBs.Invoke(new Action(() =>
                                 {
@@ -248,7 +254,7 @@ namespace Power_Supply_DashBoard
                                 Debug.WriteLine("ACTIVE CHANNEL FETCH FAILED");
                                 break;
                         }
-                        
+
                         switch (CH1outputMode)
                         {
                             case CHANNEL_MODE.CV:
@@ -295,13 +301,13 @@ namespace Power_Supply_DashBoard
                     }
                     else
                     {
-                        Debug.WriteLine("Waiting to connect...");
+                        //Debug.WriteLine("Waiting to connect...");
                     }
                     Thread.Sleep(100);
                 }
             }));
             t.Start();
-            
+
         }
         #endregion
 
@@ -313,7 +319,7 @@ namespace Power_Supply_DashBoard
         {
             if (mem_save_check.Checked == true)
             {
-                var mes = MessageBox.Show("are you sure that you want to save?","Warning", MessageBoxButtons.OKCancel);
+                var mes = MessageBox.Show("are you sure that you want to save?", "Warning", MessageBoxButtons.OKCancel);
                 string message = Convert.ToString(mes);
                 if (message == "OK")
                 {
@@ -326,7 +332,7 @@ namespace Power_Supply_DashBoard
                 Debug.WriteLine("send memory to psu");
             }
         }
-        
+
         private void M2_Click(object sender, EventArgs e)
         {
             tabControl1.SelectedIndex = 1;
@@ -343,7 +349,7 @@ namespace Power_Supply_DashBoard
             {
                 Debug.WriteLine("int");
                 _SCPI.setChannelConnection(CONNECTION_MODE.INDEPENDENT);
-               
+
             }
         }
 
@@ -357,13 +363,13 @@ namespace Power_Supply_DashBoard
 
         }
 
-        private void  Par_radioButton_CheckedChanged(object sender, EventArgs e)
+        private void Par_radioButton_CheckedChanged(object sender, EventArgs e)
         {
             if (Par_RB.Checked)
             {
                 Debug.WriteLine("par");
                 _SCPI.setChannelConnection(CONNECTION_MODE.PARALLEL);
-               
+
             }
         }
         #endregion
@@ -376,11 +382,12 @@ namespace Power_Supply_DashBoard
         {
             try
             {
-                Task.Run(async () => {
+                Task.Run(async () =>
+                {
                     if (CH1onOFF.Checked)
                     {
 
-                       // CH1onOfflg = true;
+                        // CH1onOfflg = true;
                         await _SCPI.setChannelStatus(CHANNELS.CH1, SWITCH.ON);
                     }
                     else
@@ -390,9 +397,9 @@ namespace Power_Supply_DashBoard
                     }
                     Debug.WriteLine(Convert.ToString(CH1onOFF.Checked));
                 });
-                
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -401,19 +408,20 @@ namespace Power_Supply_DashBoard
         {
             try
             {
-                Task.Run( async () => {
+                Task.Run(async () =>
+                {
                     if (CH2onOFF.Checked)
                     {
-                       // CH2onOfflg = true;
+                        // CH2onOfflg = true;
                         await _SCPI.setChannelStatus(CHANNELS.CH2, SWITCH.ON);
                     }
                     else
                     {
-                       // CH2onOfflg = false;
+                        // CH2onOfflg = false;
                         await _SCPI.setChannelStatus(CHANNELS.CH2, SWITCH.OFF);
                     }
                 });
-                
+
                 Debug.WriteLine(Convert.ToString(CH1onOFF.Checked));
             }
             catch (Exception ex)
@@ -427,7 +435,8 @@ namespace Power_Supply_DashBoard
         {
             try
             {
-                Task.Run(async () => {
+                Task.Run(async () =>
+                {
                     if (CH3onOFF.Checked)
                     {
 
@@ -452,12 +461,12 @@ namespace Power_Supply_DashBoard
         //Sets CH1 Voltage
         private async void CH1set_Click(object sender, EventArgs e)
         {
-            if(CH1vText.Text.Length > 0)
+            if (CH1vText.Text.Length > 0)
             {
                 try
                 {
                     await _SCPI.setVoltage(CHANNELS.CH1, Double.Parse(CH1vText.Text));
-   
+
                 }
                 catch (FormatException)
                 {
@@ -587,5 +596,32 @@ namespace Power_Supply_DashBoard
             Debug.WriteLine("closing");
             t.Abort();
         }
+
+        private void Chart1MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button.HasFlag(MouseButtons.Right))
+            {
+                ContextMenu cm = new System.Windows.Forms.ContextMenu();
+                cm.MenuItems.Add("Save Chart as image", new EventHandler(Item1_Click));
+                cm.Show(chart1, e.Location);              
+
+                Debug.WriteLine("RightClick");
+            }
+        }
+
+        private void Item1_Click(object sender, EventArgs e)
+        {
+            saveFileDialog1.ShowDialog();
+            string path = saveFileDialog1.FileName;
+            int fileTYpe = saveFileDialog1.FilterIndex;
+
+            if (path != null)
+            {
+                chart1.SaveImage(path, (ChartImageFormat)fileTYpe);
+            }
+            Debug.WriteLine(fileTYpe);
+            Debug.WriteLine("jeez i Still remember these");
+        }
     }
+
 }
