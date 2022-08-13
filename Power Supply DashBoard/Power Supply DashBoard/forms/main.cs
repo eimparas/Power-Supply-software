@@ -22,6 +22,8 @@ namespace Power_Supply_DashBoard
     public partial class main : Form
     {
         int GridlinesOffset = 0;
+        int SeriesGridlinesOffset = 0;
+        int ParallelGridlinesOffset = 0;
         bool CH1onOfflg = false;
         bool CH2onOfflg = false;
         bool RS1state = true;
@@ -29,16 +31,17 @@ namespace Power_Supply_DashBoard
         const int port = 5025;
         byte[] bytes = new byte[1024];
         public static SocketManagement _SCPI;
-        double voltageCH1 = 0.0;
-        double currentCH1 = 0.0;
+        public static double voltageOutCH2 = 0.0;
+        public static double voltageCH2 = 0.0;
+        public static double voltageCH1 = 0.0;
+        public static double currentCH1 = 0.0;
         double powerCH1 = 0.0;
-        double voltageOutCH1 = 0.0;
-        double currentOutCH1 = 0.0;
-        double voltageCH2 = 0.0;
-        double currentCH2 = 0.0;
-        double voltageOutCH2 = 0.0;
-        double currentOutCH2 = 0.0;
+        public static double voltageOutCH1 = 0.0;
+        public static double currentOutCH1 = 0.0;
+        public static double currentCH2 = 0.0;
+        public static double currentOutCH2 = 0.0;
         double powerCH2 = 0.0;
+        string idn = "";
 
         Thread t;
         SaveFileDialog saveFileDialog1 = new SaveFileDialog();
@@ -52,8 +55,15 @@ namespace Power_Supply_DashBoard
                 chart1.Series["current"].Points.AddY(0);
                 chart2.Series["Voltage"].Points.AddY(0);
                 chart2.Series["current"].Points.AddY(0);
+                chartParallel.Series["Voltage"].Points.AddY(0);
+                chartParallel.Series["current"].Points.AddY(0);
+                chartSeries.Series["Voltage"].Points.AddY(0);
+                chartSeries.Series["current"].Points.AddY(0);
             }//chart Y axis setup
-
+            tabControl1.Appearance = TabAppearance.FlatButtons;
+            tabControl1.ItemSize = new Size(0, 1);
+            tabControl1.SizeMode = TabSizeMode.Fixed;
+            statusLabel.Text = "Ready to connect!";
             saveFileDialog1.Filter = "A bitmap (BMP) image format.|*.bmp|Joint Photographic Experts Group(.jpg)|*.jpg";
             saveFileDialog1.Title = "Where to save this chart?";
 
@@ -83,56 +93,30 @@ namespace Power_Supply_DashBoard
                         voltageOutCH2 = _SCPI.getOutputVoltage(CHANNELS.CH2);
                         currentOutCH2 = _SCPI.getOutputCurrent(CHANNELS.CH2);
                         powerCH2 = _SCPI.getOutputPower(CHANNELS.CH2);//MEasUreed Voltage/Current/power from ADC
+                        idn = _SCPI.getIDN().Trim();
                         #endregion
-
+                        
+                        //Debug.WriteLine(idn);
+                        statusStrip.Invoke(new Action(() =>
+                        {
+                            statusLabel.Text = idn;
+                            Debug.WriteLine(statusLabel.Text);
+                        }));
                         #region Status
                         CHANNEL_MODE CH1outputMode = _SCPI.getChannelMode(CHANNELS.CH1);
-                        CHANNEL_MODE CH2outputMode = _SCPI.getChannelMode(CHANNELS.CH2);//CV-CC
+                        CHANNEL_MODE CH2outputMode = _SCPI.getChannelMode(CHANNELS.CH2);        //CV-CC
                         DISPLAYS d1 = _SCPI.getDisplay(CHANNELS.CH1);
-                        DISPLAYS d2 = _SCPI.getDisplay(CHANNELS.CH2);//Num-Waveform
-                        CONNECTION_MODE connectionMode = _SCPI.getConnectionMode();//Serial-Parallel
+                        DISPLAYS d2 = _SCPI.getDisplay(CHANNELS.CH2);                           //Num-Waveform
+                        CONNECTION_MODE connectionMode = _SCPI.getConnectionMode();             //Serial-Parallel-Independent
                         CHANNELS active = _SCPI.getActiveChannel();
-
+                        chart.resetEvent.Set();
                         //Missing CH out on off & TImer on off 
                         #endregion
-
                         //###########
                         //GUI Writes
                         //###########
-                        GridlinesOffset++;
-                        chart1.Invoke(new Action(() =>//Charts
-                        {
-                            CH1vS.Text = Convert.ToString(voltageCH1);
-                            CH1aS.Text = Convert.ToString(currentCH1);
-                            CH1wS.Text = Convert.ToString(powerCH1);
-                            CH1vO.Text = Convert.ToString(voltageOutCH1);
-                            CH1aO.Text = Convert.ToString(currentOutCH1);
-                            chart1.Series["Voltage"].Points.AddY(Convert.ToDecimal(voltageOutCH1));//data point 
-                            chart1.Series["Voltage"].Points.RemoveAt(0);
-                            chart1.Series["current"].Points.AddY(Convert.ToDecimal(currentOutCH1));//data point 
-                            chart1.Series["current"].Points.RemoveAt(0);
-                            chart1.ChartAreas[0].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
-                            chart1.ChartAreas[1].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
-                            GridlinesOffset %= (int)chart1.ChartAreas[0].AxisX.MajorGrid.Interval;
-                            GridlinesOffset %= (int)chart1.ChartAreas[1].AxisX.MajorGrid.Interval;
-                        }));
 
-                        chart2.Invoke(new Action(() =>
-                        {
-                            CH2vS.Text = Convert.ToString(voltageCH2);
-                            CH2aS.Text = Convert.ToString(currentCH2);
-                            CH2wS.Text = Convert.ToString(powerCH2);
-                            CH2vO.Text = Convert.ToString(voltageOutCH2);
-                            CH2aO.Text = Convert.ToString(currentOutCH2);
-                            chart2.Series["Voltage"].Points.AddY(Convert.ToDecimal(voltageOutCH2));//data point 
-                            chart2.Series["Voltage"].Points.RemoveAt(0);
-                            chart2.Series["current"].Points.AddY(Convert.ToDecimal(currentOutCH2));//data point 
-                            chart2.Series["current"].Points.RemoveAt(0);
-                            chart2.ChartAreas[0].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
-                            chart2.ChartAreas[1].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
-                            GridlinesOffset %= (int)chart2.ChartAreas[0].AxisX.MajorGrid.Interval;
-                            GridlinesOffset %= (int)chart2.ChartAreas[1].AxisX.MajorGrid.Interval;
-                        }));
+
 
                         //CheckBoxes RadioButtons  
                         if (d1 == DISPLAYS.WAVEFORM)
@@ -166,6 +150,7 @@ namespace Power_Supply_DashBoard
                         switch (connectionMode)
                         {
                             case CONNECTION_MODE.SERIES:
+                                SeriesGridlinesOffset++;
                                 ser_RBs.Invoke(new Action(() =>
                                 {
                                     ser_RBs.Checked = true;
@@ -178,9 +163,31 @@ namespace Power_Supply_DashBoard
                                 {
                                     Par_RBs.Checked = false;
                                 }));
+                                tabControl1.Invoke(new Action(() =>
+                                {
+                                    tabControl1.SelectTab(2);
+                                }));
+                                chartSeries.Invoke(new Action(() =>
+                                {
+                                    VSerSet.Text = Convert.ToString(voltageCH1 + voltageCH2);
+                                    ASerSet.Text = Convert.ToString(currentCH1);
+                                    WSerSet.Text = Convert.ToString((voltageCH1 + voltageCH2) * currentCH1);
+                                    VSerOut.Text = Convert.ToString(voltageOutCH1 + voltageOutCH2);
+                                    ASerOut.Text = Convert.ToString(currentOutCH1);
+                                    WSerOut.Text = Convert.ToString((voltageOutCH1 + voltageOutCH2) * currentOutCH1);
+                                    chartSeries.Series["Voltage"].Points.AddY(Convert.ToDecimal(voltageOutCH1));//data point 
+                                    chartSeries.Series["Voltage"].Points.RemoveAt(0);
+                                    chartSeries.Series["current"].Points.AddY(Convert.ToDecimal(currentOutCH1));//data point 
+                                    chartSeries.Series["current"].Points.RemoveAt(0);
+                                    chartSeries.ChartAreas[0].AxisX.MajorGrid.IntervalOffset = -SeriesGridlinesOffset;
+                                    chartSeries.ChartAreas[1].AxisX.MajorGrid.IntervalOffset = -SeriesGridlinesOffset;
+                                    SeriesGridlinesOffset %= (int) chartSeries.ChartAreas[0].AxisX.MajorGrid.Interval;
+                                    SeriesGridlinesOffset %= (int) chartSeries.ChartAreas[1].AxisX.MajorGrid.Interval;
+                                }));
                                 break;
 
                             case CONNECTION_MODE.PARALLEL:
+                                ParallelGridlinesOffset++;
                                 ser_RBs.Invoke(new Action(() =>
                                 {
                                     ser_RBs.Checked = false;
@@ -193,9 +200,32 @@ namespace Power_Supply_DashBoard
                                 {
                                     Par_RBs.Checked = true;
                                 }));
+                                tabControl1.Invoke(new Action(() =>
+                                {
+                                    tabControl1.SelectTab(1);
+                                }));
+                                chartParallel.Invoke(new Action(() =>
+                                {
+                                    VParSet.Text = Convert.ToString(voltageCH1);
+                                    AParSet.Text = Convert.ToString(currentCH1 + currentCH2);
+                                    WParSet.Text = Convert.ToString(voltageCH1 * (currentCH1 + currentCH2));
+                                    VParOut.Text = Convert.ToString(voltageOutCH1);
+                                    AParOut.Text = Convert.ToString(currentOutCH1 + currentOutCH2);
+                                    WParOut.Text = Convert.ToString(voltageOutCH1 * (currentOutCH2 + currentOutCH1));
+                                    chartParallel.Series["Voltage"].Points.AddY(Convert.ToDecimal(voltageOutCH1));//data point 
+                                    chartParallel.Series["Voltage"].Points.RemoveAt(0);
+                                    chartParallel.Series["current"].Points.AddY(Convert.ToDecimal(currentOutCH1));//data point 
+                                    chartParallel.Series["current"].Points.RemoveAt(0);
+                                    chartParallel.ChartAreas[0].AxisX.MajorGrid.IntervalOffset = -ParallelGridlinesOffset;
+                                    chartParallel.ChartAreas[1].AxisX.MajorGrid.IntervalOffset = -ParallelGridlinesOffset;
+                                    ParallelGridlinesOffset %= (int)chartParallel.ChartAreas[0].AxisX.MajorGrid.Interval;
+                                    ParallelGridlinesOffset %= (int)chartParallel.ChartAreas[1].AxisX.MajorGrid.Interval;
+                                }));
                                 break;
 
+
                             case CONNECTION_MODE.INDEPENDENT:
+                                GridlinesOffset++;
                                 ser_RBs.Invoke(new Action(() =>
                                 {
                                     ser_RBs.Checked = false;
@@ -207,6 +237,46 @@ namespace Power_Supply_DashBoard
                                 Par_RBs.Invoke(new Action(() =>
                                 {
                                     Par_RBs.Checked = false;
+                                }));
+                                tabControl1.Invoke(new Action(() =>
+                                {
+                                    tabControl1.SelectTab(0);
+                                }));
+                                chart1.Invoke(new Action(() =>//Charts
+                                {
+
+                                    CH1vS.Text = Convert.ToString(voltageCH1);
+                                    CH1aS.Text = Convert.ToString(currentCH1);
+                                    CH1wS.Text = Convert.ToString(voltageCH1 * currentCH1);
+                                    CH1vO.Text = Convert.ToString(voltageOutCH1);
+                                    CH1aO.Text = Convert.ToString(currentOutCH1);
+                                    CH1wO.Text = Convert.ToString(powerCH1);
+                                    chart1.Series["Voltage"].Points.AddY(Convert.ToDecimal(voltageOutCH1));//data point 
+                                    chart1.Series["Voltage"].Points.RemoveAt(0);
+                                    chart1.Series["current"].Points.AddY(Convert.ToDecimal(currentOutCH1));//data point 
+                                    chart1.Series["current"].Points.RemoveAt(0);
+                                    chart1.ChartAreas[0].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
+                                    chart1.ChartAreas[1].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
+                                    GridlinesOffset %= (int)chart1.ChartAreas[0].AxisX.MajorGrid.Interval;
+                                    GridlinesOffset %= (int)chart1.ChartAreas[1].AxisX.MajorGrid.Interval;
+                                }));
+
+                                chart2.Invoke(new Action(() =>
+                                {
+                                    CH2vS.Text = Convert.ToString(voltageCH2);
+                                    CH2aS.Text = Convert.ToString(currentCH2);
+                                    CH2wS.Text = Convert.ToString(voltageCH2 * currentCH2);
+                                    CH2vO.Text = Convert.ToString(voltageOutCH2);
+                                    CH2aO.Text = Convert.ToString(currentOutCH2);
+                                    CH2wO.Text = Convert.ToString(powerCH2);
+                                    chart2.Series["Voltage"].Points.AddY(Convert.ToDecimal(voltageOutCH2));//data point 
+                                    chart2.Series["Voltage"].Points.RemoveAt(0);
+                                    chart2.Series["current"].Points.AddY(Convert.ToDecimal(currentOutCH2));//data point 
+                                    chart2.Series["current"].Points.RemoveAt(0);
+                                    chart2.ChartAreas[0].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
+                                    chart2.ChartAreas[1].AxisX.MajorGrid.IntervalOffset = -GridlinesOffset;
+                                    GridlinesOffset %= (int)chart2.ChartAreas[0].AxisX.MajorGrid.Interval;
+                                    GridlinesOffset %= (int)chart2.ChartAreas[1].AxisX.MajorGrid.Interval;
                                 }));
                                 break;
 
@@ -301,7 +371,8 @@ namespace Power_Supply_DashBoard
                     }
                     else
                     {
-                        //Debug.WriteLine("Waiting to connect...");
+                        Debug.WriteLine("Waiting to connect...");
+
                     }
                     Thread.Sleep(100);
                 }
@@ -601,7 +672,7 @@ namespace Power_Supply_DashBoard
         {
             if (e.Button.HasFlag(MouseButtons.Right))
             {
-                ContextMenu cm = new System.Windows.Forms.ContextMenu();
+                ContextMenu cm = new ContextMenu();
                 cm.MenuItems.Add("Save Chart as image", new EventHandler(Item1_Click));
                 cm.Show(chart1, e.Location);              
 
@@ -621,6 +692,11 @@ namespace Power_Supply_DashBoard
             }
             Debug.WriteLine(fileTYpe);
             Debug.WriteLine("jeez i Still remember these");
+        }
+
+        private void M5_Click(object sender, EventArgs e)
+        {
+            tabControl1.TabIndex = 1;
         }
     }
 

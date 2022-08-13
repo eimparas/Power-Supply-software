@@ -42,15 +42,15 @@
             this.SaveFile = new System.Windows.Forms.Button();
             this.pathTextbox = new System.Windows.Forms.TextBox();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.CH2Aout = new System.Windows.Forms.CheckBox();
+            this.CH2Aset = new System.Windows.Forms.CheckBox();
+            this.CH2Vout = new System.Windows.Forms.CheckBox();
+            this.CH2Vset = new System.Windows.Forms.CheckBox();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.Aout = new System.Windows.Forms.CheckBox();
-            this.Aset = new System.Windows.Forms.CheckBox();
-            this.Vset = new System.Windows.Forms.CheckBox();
-            this.Vout = new System.Windows.Forms.CheckBox();
+            this.CH1Aout = new System.Windows.Forms.CheckBox();
+            this.CH1Aset = new System.Windows.Forms.CheckBox();
+            this.CH1Vset = new System.Windows.Forms.CheckBox();
+            this.CH1Vout = new System.Windows.Forms.CheckBox();
             this.Chart_ctrl_gbox = new System.Windows.Forms.GroupBox();
             this.Clear = new System.Windows.Forms.Button();
             this.scrsh = new System.Windows.Forms.Button();
@@ -166,10 +166,10 @@
             // 
             this.groupBox10.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox10.Controls.Add(this.checkBox1);
-            this.groupBox10.Controls.Add(this.checkBox2);
-            this.groupBox10.Controls.Add(this.checkBox4);
-            this.groupBox10.Controls.Add(this.checkBox3);
+            this.groupBox10.Controls.Add(this.CH2Aout);
+            this.groupBox10.Controls.Add(this.CH2Aset);
+            this.groupBox10.Controls.Add(this.CH2Vout);
+            this.groupBox10.Controls.Add(this.CH2Vset);
             this.groupBox10.Location = new System.Drawing.Point(12, 138);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(71, 95);
@@ -177,66 +177,66 @@
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "CH2";
             // 
-            // checkBox1
+            // CH2Aout
             // 
-            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.CH2Aout.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(6, 69);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(48, 17);
-            this.checkBox1.TabIndex = 7;
-            this.checkBox1.Text = "Aout";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.CH2Aout.AutoSize = true;
+            this.CH2Aout.Location = new System.Drawing.Point(6, 69);
+            this.CH2Aout.Name = "CH2Aout";
+            this.CH2Aout.Size = new System.Drawing.Size(48, 17);
+            this.CH2Aout.TabIndex = 7;
+            this.CH2Aout.Text = "Aout";
+            this.CH2Aout.UseVisualStyleBackColor = true;
             // 
-            // checkBox2
+            // CH2Aset
             // 
-            this.checkBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.CH2Aset.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(6, 52);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(47, 17);
-            this.checkBox2.TabIndex = 6;
-            this.checkBox2.Text = "Aset";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.CH2Aset.AutoSize = true;
+            this.CH2Aset.Location = new System.Drawing.Point(6, 52);
+            this.CH2Aset.Name = "CH2Aset";
+            this.CH2Aset.Size = new System.Drawing.Size(47, 17);
+            this.CH2Aset.TabIndex = 6;
+            this.CH2Aset.Text = "Aset";
+            this.CH2Aset.UseVisualStyleBackColor = true;
             // 
-            // checkBox4
+            // CH2Vout
             // 
-            this.checkBox4.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.CH2Vout.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(6, 18);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(48, 17);
-            this.checkBox4.TabIndex = 4;
-            this.checkBox4.Text = "Vout";
-            this.checkBox4.UseVisualStyleBackColor = true;
+            this.CH2Vout.AutoSize = true;
+            this.CH2Vout.Location = new System.Drawing.Point(6, 18);
+            this.CH2Vout.Name = "CH2Vout";
+            this.CH2Vout.Size = new System.Drawing.Size(48, 17);
+            this.CH2Vout.TabIndex = 4;
+            this.CH2Vout.Text = "Vout";
+            this.CH2Vout.UseVisualStyleBackColor = true;
             // 
-            // checkBox3
+            // CH2Vset
             // 
-            this.checkBox3.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.CH2Vset.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(6, 35);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(47, 17);
-            this.checkBox3.TabIndex = 5;
-            this.checkBox3.Text = "Vset";
-            this.checkBox3.UseVisualStyleBackColor = true;
+            this.CH2Vset.AutoSize = true;
+            this.CH2Vset.Location = new System.Drawing.Point(6, 35);
+            this.CH2Vset.Name = "CH2Vset";
+            this.CH2Vset.Size = new System.Drawing.Size(47, 17);
+            this.CH2Vset.TabIndex = 5;
+            this.CH2Vset.Text = "Vset";
+            this.CH2Vset.UseVisualStyleBackColor = true;
             // 
             // groupBox9
             // 
             this.groupBox9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox9.Controls.Add(this.Aout);
-            this.groupBox9.Controls.Add(this.Aset);
-            this.groupBox9.Controls.Add(this.Vset);
-            this.groupBox9.Controls.Add(this.Vout);
+            this.groupBox9.Controls.Add(this.CH1Aout);
+            this.groupBox9.Controls.Add(this.CH1Aset);
+            this.groupBox9.Controls.Add(this.CH1Vset);
+            this.groupBox9.Controls.Add(this.CH1Vout);
             this.groupBox9.Location = new System.Drawing.Point(12, 47);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.Size = new System.Drawing.Size(71, 90);
@@ -244,57 +244,57 @@
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "CH1";
             // 
-            // Aout
+            // CH1Aout
             // 
-            this.Aout.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.CH1Aout.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Aout.AutoSize = true;
-            this.Aout.Location = new System.Drawing.Point(6, 70);
-            this.Aout.Name = "Aout";
-            this.Aout.Size = new System.Drawing.Size(48, 17);
-            this.Aout.TabIndex = 3;
-            this.Aout.Text = "Aout";
-            this.Aout.UseVisualStyleBackColor = true;
+            this.CH1Aout.AutoSize = true;
+            this.CH1Aout.Location = new System.Drawing.Point(6, 70);
+            this.CH1Aout.Name = "CH1Aout";
+            this.CH1Aout.Size = new System.Drawing.Size(48, 17);
+            this.CH1Aout.TabIndex = 3;
+            this.CH1Aout.Text = "Aout";
+            this.CH1Aout.UseVisualStyleBackColor = true;
             // 
-            // Aset
+            // CH1Aset
             // 
-            this.Aset.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.CH1Aset.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Aset.AutoSize = true;
-            this.Aset.Location = new System.Drawing.Point(6, 53);
-            this.Aset.Name = "Aset";
-            this.Aset.Size = new System.Drawing.Size(47, 17);
-            this.Aset.TabIndex = 2;
-            this.Aset.Text = "Aset";
-            this.Aset.UseVisualStyleBackColor = true;
+            this.CH1Aset.AutoSize = true;
+            this.CH1Aset.Location = new System.Drawing.Point(6, 53);
+            this.CH1Aset.Name = "CH1Aset";
+            this.CH1Aset.Size = new System.Drawing.Size(47, 17);
+            this.CH1Aset.TabIndex = 2;
+            this.CH1Aset.Text = "Aset";
+            this.CH1Aset.UseVisualStyleBackColor = true;
             // 
-            // Vset
+            // CH1Vset
             // 
-            this.Vset.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.CH1Vset.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Vset.AutoSize = true;
-            this.Vset.Location = new System.Drawing.Point(6, 36);
-            this.Vset.Name = "Vset";
-            this.Vset.Size = new System.Drawing.Size(47, 17);
-            this.Vset.TabIndex = 1;
-            this.Vset.Text = "Vset";
-            this.Vset.UseVisualStyleBackColor = true;
+            this.CH1Vset.AutoSize = true;
+            this.CH1Vset.Location = new System.Drawing.Point(6, 36);
+            this.CH1Vset.Name = "CH1Vset";
+            this.CH1Vset.Size = new System.Drawing.Size(47, 17);
+            this.CH1Vset.TabIndex = 1;
+            this.CH1Vset.Text = "Vset";
+            this.CH1Vset.UseVisualStyleBackColor = true;
             // 
-            // Vout
+            // CH1Vout
             // 
-            this.Vout.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.CH1Vout.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.Vout.AutoSize = true;
-            this.Vout.Location = new System.Drawing.Point(6, 19);
-            this.Vout.Name = "Vout";
-            this.Vout.Size = new System.Drawing.Size(48, 17);
-            this.Vout.TabIndex = 0;
-            this.Vout.Text = "Vout";
-            this.Vout.UseVisualStyleBackColor = true;
+            this.CH1Vout.AutoSize = true;
+            this.CH1Vout.Location = new System.Drawing.Point(6, 19);
+            this.CH1Vout.Name = "CH1Vout";
+            this.CH1Vout.Size = new System.Drawing.Size(48, 17);
+            this.CH1Vout.TabIndex = 0;
+            this.CH1Vout.Text = "Vout";
+            this.CH1Vout.UseVisualStyleBackColor = true;
             // 
             // Chart_ctrl_gbox
             // 
@@ -409,15 +409,15 @@
         private System.Windows.Forms.Button SaveFile;
         private System.Windows.Forms.TextBox pathTextbox;
         private System.Windows.Forms.GroupBox groupBox10;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox4;
-        private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.CheckBox CH2Aout;
+        private System.Windows.Forms.CheckBox CH2Aset;
+        private System.Windows.Forms.CheckBox CH2Vout;
+        private System.Windows.Forms.CheckBox CH2Vset;
         private System.Windows.Forms.GroupBox groupBox9;
-        private System.Windows.Forms.CheckBox Aout;
-        private System.Windows.Forms.CheckBox Aset;
-        private System.Windows.Forms.CheckBox Vset;
-        private System.Windows.Forms.CheckBox Vout;
+        private System.Windows.Forms.CheckBox CH1Aout;
+        private System.Windows.Forms.CheckBox CH1Aset;
+        private System.Windows.Forms.CheckBox CH1Vset;
+        private System.Windows.Forms.CheckBox CH1Vout;
         private System.Windows.Forms.GroupBox Chart_ctrl_gbox;
         private System.Windows.Forms.CheckBox ch1vE;
         private System.Windows.Forms.Timer timer1;
