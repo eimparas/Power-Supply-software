@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -14,17 +15,32 @@ namespace Power_Supply_DashBoard
     
     public partial class networksetup : Form
     {
-        double voltageCH1 = 0.0;
-        double currentCH1 = 0.0;
+        FolderBrowserDialog save = new FolderBrowserDialog();
+
+        string _DocumentLocation = "";
+        string _ourDir;
+
         public networksetup()
         {
             InitializeComponent();
-            
+            //save.Title = "path to dataloging Directory";
+            //save.Filter = "Directory | directory";
+           
         }
 
         private void networksetup_Load(object sender, EventArgs e)
         {
-
+            _DocumentLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+             
+            _ourDir = _DocumentLocation + "\\PSU Dashboard";
+            Debug.WriteLine(_ourDir);
+            if (!Directory.Exists(_ourDir))
+            {
+                Directory.CreateDirectory(_ourDir);
+            }//check to see if the Directory used by the app is created in the system , if not creates it. 
+            SaveTxtBox.Text = _ourDir;
+            save.SelectedPath = _ourDir;
+            
         }
 
         private void key(object sender, KeyPressEventArgs e)
@@ -83,9 +99,14 @@ namespace Power_Supply_DashBoard
             }
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void SaveButton_Click(object sender, EventArgs e)
         {
-            
+            var result = save.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                _ourDir = save.SelectedPath;
+                SaveTxtBox.Text = _ourDir;
+            }
         }
     }
 }

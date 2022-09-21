@@ -40,6 +40,7 @@ namespace Power_Supply_DashBoard
         public static double currentOutCH1 = 0.0;
         public static double currentCH2 = 0.0;
         public static double currentOutCH2 = 0.0;
+        public string DatalogPath = "";
         double powerCH2 = 0.0;
         string idn = "";
 
@@ -94,9 +95,8 @@ namespace Power_Supply_DashBoard
                         currentOutCH2 = _SCPI.getOutputCurrent(CHANNELS.CH2);
                         powerCH2 = _SCPI.getOutputPower(CHANNELS.CH2);//MEasUreed Voltage/Current/power from ADC
                         idn = _SCPI.getIDN().Trim();
-                        #endregion
+                        #endregion                       
                         
-                        //Debug.WriteLine(idn);
                         statusStrip.Invoke(new Action(() =>
                         {
                             statusLabel.Text = idn;
@@ -697,6 +697,11 @@ namespace Power_Supply_DashBoard
         private void M5_Click(object sender, EventArgs e)
         {
             tabControl1.TabIndex = 1;
+        }
+
+        private void main_Load(object sender, EventArgs e)
+        {
+
         }
     }
 

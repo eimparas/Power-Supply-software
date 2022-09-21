@@ -38,11 +38,13 @@
             this.ip4 = new System.Windows.Forms.TextBox();
             this.ip3 = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label5 = new System.Windows.Forms.Label();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.Date = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.IP = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.SaveButton = new System.Windows.Forms.Button();
+            this.SaveTxtBox = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // conect
@@ -138,48 +140,56 @@
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.ip2);
             this.panel1.Controls.Add(this.ip1);
-            this.panel1.Location = new System.Drawing.Point(12, 40);
+            this.panel1.Location = new System.Drawing.Point(6, 19);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(209, 23);
             this.panel1.TabIndex = 13;
             // 
-            // label5
+            // groupBox1
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 10);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(108, 13);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "instrument IP address";
+            this.groupBox1.Controls.Add(this.panel1);
+            this.groupBox1.Location = new System.Drawing.Point(12, 12);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(227, 56);
+            this.groupBox1.TabIndex = 15;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Instrument IP address";
             // 
-            // listView1
+            // groupBox2
             // 
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.Date,
-            this.IP});
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(12, 67);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(241, 200);
-            this.listView1.TabIndex = 15;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.groupBox2.Controls.Add(this.SaveButton);
+            this.groupBox2.Controls.Add(this.SaveTxtBox);
+            this.groupBox2.Location = new System.Drawing.Point(12, 75);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(302, 111);
+            this.groupBox2.TabIndex = 16;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Dataloging Location";
             // 
-            // Date
+            // SaveButton
             // 
-            this.Date.Text = "Date";
+            this.SaveButton.Location = new System.Drawing.Point(221, 42);
+            this.SaveButton.Name = "SaveButton";
+            this.SaveButton.Size = new System.Drawing.Size(75, 23);
+            this.SaveButton.TabIndex = 1;
+            this.SaveButton.Text = "Save As";
+            this.SaveButton.UseVisualStyleBackColor = true;
+            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
-            // IP
+            // SaveTxtBox
             // 
-            this.IP.Text = "IP";
+            this.SaveTxtBox.Location = new System.Drawing.Point(7, 44);
+            this.SaveTxtBox.Name = "SaveTxtBox";
+            this.SaveTxtBox.Size = new System.Drawing.Size(208, 20);
+            this.SaveTxtBox.TabIndex = 0;
             // 
             // networksetup
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(265, 308);
-            this.Controls.Add(this.listView1);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.panel1);
+            this.ClientSize = new System.Drawing.Size(326, 317);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.Cancel);
             this.Controls.Add(this.conect);
             this.Name = "networksetup";
@@ -187,8 +197,10 @@
             this.Load += new System.EventHandler(this.networksetup_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -203,9 +215,9 @@
         private System.Windows.Forms.TextBox ip4;
         private System.Windows.Forms.TextBox ip3;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.ColumnHeader Date;
-        private System.Windows.Forms.ColumnHeader IP;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button SaveButton;
+        private System.Windows.Forms.TextBox SaveTxtBox;
     }
 }

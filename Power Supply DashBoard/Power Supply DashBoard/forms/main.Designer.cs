@@ -251,7 +251,7 @@
             this.statusLabel});
             this.statusStrip.Location = new System.Drawing.Point(0, 644);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(1479, 22);
+            this.statusStrip.Size = new System.Drawing.Size(1505, 22);
             this.statusStrip.TabIndex = 2;
             this.statusStrip.Text = "statusStrip1";
             // 
@@ -261,7 +261,7 @@
             this.statusLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.statusLabel.Margin = new System.Windows.Forms.Padding(0);
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(1464, 22);
+            this.statusLabel.Size = new System.Drawing.Size(1490, 22);
             this.statusLabel.Spring = true;
             this.statusLabel.Text = "null";
             this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -1979,14 +1979,14 @@
             // networkSetingsToolStripMenuItem
             // 
             this.networkSetingsToolStripMenuItem.Name = "networkSetingsToolStripMenuItem";
-            this.networkSetingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.networkSetingsToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.networkSetingsToolStripMenuItem.Text = "Network Setings";
             this.networkSetingsToolStripMenuItem.Click += new System.EventHandler(this.NetworkSetingsToolStripMenuItem_Click);
             // 
             // instrumentToolStripMenuItem
             // 
             this.instrumentToolStripMenuItem.Name = "instrumentToolStripMenuItem";
-            this.instrumentToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.instrumentToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.instrumentToolStripMenuItem.Text = "instrument";
             this.instrumentToolStripMenuItem.Click += new System.EventHandler(this.InstrumentToolStripMenuItem_Click);
             // 
@@ -2027,6 +2027,7 @@
             this.Name = "main";
             this.Text = " Power Supply";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.main_Closing);
+            this.Load += new System.EventHandler(this.main_Load);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.groupBox5.ResumeLayout(false);
