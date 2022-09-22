@@ -1,7 +1,24 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Power_Supply_DashBoard.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DataPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%userprofile%\documents\PSU Dashboard</Value>
+    </Setting>
+    <Setting Name="Hostname" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="IP1" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">192</Value>
+    </Setting>
+    <Setting Name="IP2" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">168</Value>
+    </Setting>
+    <Setting Name="IP3" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="IP4" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

@@ -38,9 +38,19 @@ namespace Power_Supply_DashBoard
             {
                 Directory.CreateDirectory(_ourDir);
             }//check to see if the Directory used by the app is created in the system , if not creates it. 
-            SaveTxtBox.Text = _ourDir;
-            save.SelectedPath = _ourDir;
-            
+            save.SelectedPath = _ourDir;//set the folderPicker StartPoint
+
+            ip1.Text = Convert.ToString(Properties.Settings.Default.IP1);
+            ip2.Text = Convert.ToString(Properties.Settings.Default.IP2);
+            ip3.Text = Convert.ToString(Properties.Settings.Default.IP3);
+            ip4.Text = Convert.ToString(Properties.Settings.Default.IP4);//retrive the lastUsed IP
+
+            SaveTxtBox.Text = Properties.Settings.Default.DataPath;//retrive the lastUsed Path
+
+
+            //Properties.Settings.Default.DataPath = _ourDir;//save the app's workdir to the config 
+            //Properties.Settings.Default.Save();//Save the config
+
         }
 
         private void key(object sender, KeyPressEventArgs e)
@@ -65,10 +75,19 @@ namespace Power_Supply_DashBoard
         void Connect()
         {
             string _ip = ip1.Text + '.' + ip2.Text+'.'+ ip3.Text+ip4.Text;
+
+            Properties.Settings.Default.Hostname = _ip;
+            Properties.Settings.Default.IP1 = Convert.ToInt16(ip1.Text);
+            Properties.Settings.Default.IP2 = Convert.ToInt16(ip2.Text);
+            Properties.Settings.Default.IP3 = Convert.ToInt16(ip3.Text);
+            Properties.Settings.Default.IP4 = Convert.ToInt16(ip4.Text);//Store the lastUsed IP
+            Properties.Settings.Default.DataPath = _ourDir;//Store the last used Dir
+
+            Properties.Settings.Default.Save();
             try
             {
-                 main._SCPI = new SocketManagement(_ip, 5025);
-                 main._SCPI.connect();
+                //main._SCPI = new SocketManagement(_ip, 5025);
+                //main._SCPI.connect();
             }
             catch (Exception ex)
             {
@@ -105,7 +124,15 @@ namespace Power_Supply_DashBoard
             if (result == DialogResult.OK)
             {
                 _ourDir = save.SelectedPath;
-                SaveTxtBox.Text = _ourDir;
+                Properties.Settings.Default.DataPath = _ourDir;//save the app's workdir to the config 
+                                                               
+                //SaveTxtBox.Text = _ourDir;
+
+                save.SelectedPath = _ourDir;//set the folderPicker to the new  StartPoint
+
+                SaveTxtBox.Text = Properties.Settings.Default.DataPath;//Write the path to the textbox from the config
+                Properties.Settings.Default.Save();//Save the config
+                Debug.WriteLine(Properties.Settings.Default.DataPath);
             }
         }
     }

@@ -85,19 +85,23 @@
             this.chart1.Name = "chart1";
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series1.Enabled = false;
             series1.Legend = "Legend1";
             series1.Name = "CH1V";
             series2.ChartArea = "ChartArea1";
             series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series2.Enabled = false;
             series2.Legend = "Legend1";
             series2.Name = "CH2V";
             series3.ChartArea = "ChartArea1";
             series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series3.Enabled = false;
             series3.Legend = "Legend1";
             series3.Name = "CH1A";
             series3.YAxisType = System.Windows.Forms.DataVisualization.Charting.AxisType.Secondary;
             series4.ChartArea = "ChartArea1";
             series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+            series4.Enabled = false;
             series4.Legend = "Legend1";
             series4.Name = "CH2A";
             series4.YAxisType = System.Windows.Forms.DataVisualization.Charting.AxisType.Secondary;
@@ -330,6 +334,7 @@
             this.scrsh.TabIndex = 4;
             this.scrsh.Text = "screenshoot";
             this.scrsh.UseVisualStyleBackColor = true;
+            this.scrsh.Click += new System.EventHandler(this.scrsh_Click);
             // 
             // checkBox8
             // 
@@ -340,6 +345,7 @@
             this.checkBox8.TabIndex = 3;
             this.checkBox8.Text = "CH2A";
             this.checkBox8.UseVisualStyleBackColor = true;
+            this.checkBox8.CheckedChanged += new System.EventHandler(this.checkBox8_CheckedChanged);
             // 
             // checkBox7
             // 
@@ -389,6 +395,7 @@
             this.Controls.Add(this.chart1);
             this.Name = "chart";
             this.Text = "chart";
+            this.Load += new System.EventHandler(this.chart_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.DataLogBox.ResumeLayout(false);
             this.DataLogBox.PerformLayout();

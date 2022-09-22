@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Globalization;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -18,7 +19,7 @@ namespace Power_Supply_DashBoard
         int x;
         int GridlinesOffset = 0;
         private static string path;
-        SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+        //SaveFileDialog saveFileDialog1 = new SaveFileDialog();
         Thread dataloggingThread;
       
         public chart()
@@ -38,15 +39,47 @@ namespace Power_Supply_DashBoard
                 }//chart y`y axis setup
                 Debug.WriteLine("hello world from chart");
 
-            saveFileDialog1.Filter = "coma separated values|*.csv";
-            saveFileDialog1.Title = "path to dataloging file";
+            //saveFileDialog1.Filter = "coma separated values|*.csv";
+            //saveFileDialog1.Title = "path to dataloging file";
          
         }
+        private void chart_Load(object sender, EventArgs e)
+        {
+             //path = Properties.Settings.Default.DataPath;
 
+            string csvPath = Properties.Settings.Default.DataPath + "\\CSV\\";
+            if (!Directory.Exists(csvPath))
+            {
+                Directory.CreateDirectory(csvPath);
+            }
+            Debug.WriteLine(csvPath);
+            string date = DateTime.Now.ToString(new CultureInfo("de-DE")).Replace(":", ".") + ".";
+            Debug.WriteLine(date);
+
+            path = csvPath + date + "csv";
+
+            Debug.WriteLine(path);
+        }
+
+        #region EnabledSeries
         private void CheckBox5_CheckedChanged(object sender, EventArgs e)
         {
             chart1.Series["CH1V"].Enabled = ch1vE.Checked;
         }
+        private void CheckBox6_CheckedChanged(object sender, EventArgs e)
+        {
+            chart1.Series["CH1A"].Enabled = ch1vE.Checked;
+        }
+        private void checkBox7_CheckedChanged(object sender, EventArgs e)
+        {
+            chart1.Series["CH2V"].Enabled = CH12vE.Checked;
+        }
+        private void checkBox8_CheckedChanged(object sender, EventArgs e)
+        {
+            chart1.Series["CH2A"].Enabled = CH12vE.Checked;
+        }
+        #endregion
+
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
@@ -73,34 +106,14 @@ namespace Power_Supply_DashBoard
 
         private void SaveFile_Click(object sender, EventArgs e)
         {
-            saveFileDialog1.ShowDialog();
-            path = saveFileDialog1.FileName;
+            //saveFileDialog1.ShowDialog();
+            //path = saveFileDialog1.FileName;
             pathTextbox.Text = path;
             //datalogingThread.IsBackground = true;
             //datalogingThread.Start();
         }
 
-        /*static void Datalog()
-        {
-            while (true)
-            {
-                using (StreamWriter file = new StreamWriter(path, true))
-                {
-                    file.WriteLine(Convert.ToString(DateTime.Now));
-                }
-
-                Thread.Sleep(1000);
-            }
-        }*/
-
-        private void CheckBox6_CheckedChanged(object sender, EventArgs e)
-        {
-            chart1.Series["CH1A"].Enabled = ch1vE.Checked;
-        }
-        private void checkBox7_CheckedChanged(object sender, EventArgs e)
-        {
-            chart1.Series["CH1V"].Enabled = CH12vE.Checked;
-        }
+        
 
         private void Start_Click(object sender, EventArgs e)
         {
@@ -215,6 +228,29 @@ namespace Power_Supply_DashBoard
                 }
             }
         }
+
         #endregion
+
+        private void scrsh_Click(object sender, EventArgs e)
+        {
+            string imagePath = Properties.Settings.Default.DataPath + "\\Images\\";
+            if (!Directory.Exists(imagePath))
+            {
+                Directory.CreateDirectory(imagePath);
+            }
+            Debug.WriteLine(imagePath);
+            string date = DateTime.Now.ToString(new CultureInfo("de-DE")).Replace(":", ".") + ".";
+            Debug.WriteLine(date);
+
+            string imgpath = imagePath + date + "jpeg";
+
+            Debug.WriteLine(imgpath);
+            if (path != null)
+            {
+                chart1.SaveImage(imgpath, ChartImageFormat.Jpeg);
+            }
+        }
+
+        
     }
 }

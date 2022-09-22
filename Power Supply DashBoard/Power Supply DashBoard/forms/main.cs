@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,6 +17,7 @@ using System.Threading;
 using System.Timers;
 using SPD3303X_E;
 using Timer = System.Windows.Forms.Timer;
+using System.Globalization;
 
 namespace Power_Supply_DashBoard
 {
@@ -45,8 +47,6 @@ namespace Power_Supply_DashBoard
         string idn = "";
 
         Thread t;
-        SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-
         public main()
         {
             InitializeComponent();
@@ -64,10 +64,7 @@ namespace Power_Supply_DashBoard
             tabControl1.Appearance = TabAppearance.FlatButtons;
             tabControl1.ItemSize = new Size(0, 1);
             tabControl1.SizeMode = TabSizeMode.Fixed;
-            statusLabel.Text = "Ready to connect!";
-            saveFileDialog1.Filter = "A bitmap (BMP) image format.|*.bmp|Joint Photographic Experts Group(.jpg)|*.jpg";
-            saveFileDialog1.Title = "Where to save this chart?";
-
+            statusLabel.Text = "Ready to connect!"; 
             //########################################
             //data acquisition 
             //########################################
@@ -371,7 +368,7 @@ namespace Power_Supply_DashBoard
                     }
                     else
                     {
-                        Debug.WriteLine("Waiting to connect...");
+                       // Debug.WriteLine("Waiting to connect...");
 
                     }
                     Thread.Sleep(100);
@@ -628,6 +625,7 @@ namespace Power_Supply_DashBoard
         private void DatalogingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             chart chartdialog = new chart();
+            chartdialog.StartPosition = FormStartPosition.CenterParent;
             chartdialog.Show();
         }
         #endregion
@@ -667,33 +665,6 @@ namespace Power_Supply_DashBoard
             Debug.WriteLine("closing");
             t.Abort();
         }
-
-        private void Chart1MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button.HasFlag(MouseButtons.Right))
-            {
-                ContextMenu cm = new ContextMenu();
-                cm.MenuItems.Add("Save Chart as image", new EventHandler(Item1_Click));
-                cm.Show(chart1, e.Location);              
-
-                Debug.WriteLine("RightClick");
-            }
-        }
-
-        private void Item1_Click(object sender, EventArgs e)
-        {
-            saveFileDialog1.ShowDialog();
-            string path = saveFileDialog1.FileName;
-            int fileTYpe = saveFileDialog1.FilterIndex;
-
-            if (path != null)
-            {
-                chart1.SaveImage(path, (ChartImageFormat)fileTYpe);
-            }
-            Debug.WriteLine(fileTYpe);
-            Debug.WriteLine("jeez i Still remember these");
-        }
-
         private void M5_Click(object sender, EventArgs e)
         {
             tabControl1.TabIndex = 1;
@@ -701,6 +672,27 @@ namespace Power_Supply_DashBoard
 
         private void main_Load(object sender, EventArgs e)
         {
+
+        }
+
+        private void Chart1Save_Click(object sender, EventArgs e)
+        {
+            string imagePath = Properties.Settings.Default.DataPath + "\\Images\\";
+            if (!Directory.Exists(imagePath))
+            {
+                Directory.CreateDirectory(imagePath);
+            }
+            Debug.WriteLine(imagePath);
+            string date = DateTime.Now.ToString(new CultureInfo("de-DE")).Replace(":", ".") + ".";
+            Debug.WriteLine(date);
+
+            string path = imagePath + date + "jpeg";
+
+            Debug.WriteLine(path);
+            if (path != null)
+            {
+                chart1.SaveImage(path, ChartImageFormat.Jpeg);
+            }
 
         }
     }
