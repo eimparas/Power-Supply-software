@@ -202,7 +202,6 @@
             this.instrumentToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.datalogingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.terminalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox20.SuspendLayout();
@@ -253,7 +252,7 @@
             this.statusLabel});
             this.statusStrip.Location = new System.Drawing.Point(0, 644);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(1545, 22);
+            this.statusStrip.Size = new System.Drawing.Size(1607, 22);
             this.statusStrip.TabIndex = 2;
             this.statusStrip.Text = "statusStrip1";
             // 
@@ -263,7 +262,7 @@
             this.statusLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.statusLabel.Margin = new System.Windows.Forms.Padding(0);
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(1530, 22);
+            this.statusLabel.Size = new System.Drawing.Size(1588, 22);
             this.statusLabel.Spring = true;
             this.statusLabel.Text = "null";
             this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -525,6 +524,7 @@
             this.M4.TabIndex = 8;
             this.M4.Text = "M4";
             this.M4.UseVisualStyleBackColor = true;
+            this.M4.Click += new System.EventHandler(this.M4_Click);
             // 
             // mem_save_check
             // 
@@ -544,6 +544,7 @@
             this.M3.TabIndex = 7;
             this.M3.Text = "M3";
             this.M3.UseVisualStyleBackColor = true;
+            this.M3.Click += new System.EventHandler(this.M3_Click);
             // 
             // M2
             // 
@@ -617,6 +618,7 @@
             this.Chart2Save.TabIndex = 25;
             this.Chart2Save.Text = "Save Image";
             this.Chart2Save.UseVisualStyleBackColor = true;
+            this.Chart2Save.Click += new System.EventHandler(this.Chart2Save_Click);
             // 
             // groupBox10
             // 
@@ -1671,7 +1673,7 @@
             this.groupBox17.Controls.Add(this.panel7);
             this.groupBox17.Location = new System.Drawing.Point(309, 421);
             this.groupBox17.Name = "groupBox17";
-            this.groupBox17.Size = new System.Drawing.Size(338, 153);
+            this.groupBox17.Size = new System.Drawing.Size(245, 153);
             this.groupBox17.TabIndex = 27;
             this.groupBox17.TabStop = false;
             this.groupBox17.Text = "Control";
@@ -1981,14 +1983,14 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.closeToolStripMenuItem.Text = "Close";
             // 
             // editToolStripMenuItem
@@ -2003,22 +2005,21 @@
             // networkSetingsToolStripMenuItem
             // 
             this.networkSetingsToolStripMenuItem.Name = "networkSetingsToolStripMenuItem";
-            this.networkSetingsToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.networkSetingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.networkSetingsToolStripMenuItem.Text = "Network Setings";
             this.networkSetingsToolStripMenuItem.Click += new System.EventHandler(this.NetworkSetingsToolStripMenuItem_Click);
             // 
             // instrumentToolStripMenuItem
             // 
             this.instrumentToolStripMenuItem.Name = "instrumentToolStripMenuItem";
-            this.instrumentToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.instrumentToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.instrumentToolStripMenuItem.Text = "instrument";
             this.instrumentToolStripMenuItem.Click += new System.EventHandler(this.InstrumentToolStripMenuItem_Click);
             // 
             // dataToolStripMenuItem
             // 
             this.dataToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.datalogingToolStripMenuItem,
-            this.terminalToolStripMenuItem});
+            this.datalogingToolStripMenuItem});
             this.dataToolStripMenuItem.Name = "dataToolStripMenuItem";
             this.dataToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
             this.dataToolStripMenuItem.Text = "Data";
@@ -2026,16 +2027,9 @@
             // datalogingToolStripMenuItem
             // 
             this.datalogingToolStripMenuItem.Name = "datalogingToolStripMenuItem";
-            this.datalogingToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.datalogingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.datalogingToolStripMenuItem.Text = "Data Logging";
             this.datalogingToolStripMenuItem.Click += new System.EventHandler(this.DatalogingToolStripMenuItem_Click);
-            // 
-            // terminalToolStripMenuItem
-            // 
-            this.terminalToolStripMenuItem.Name = "terminalToolStripMenuItem";
-            this.terminalToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
-            this.terminalToolStripMenuItem.Text = "Terminal";
-            this.terminalToolStripMenuItem.Click += new System.EventHandler(this.terminalToolStripMenuItem_Click);
             // 
             // main
             // 
@@ -2224,7 +2218,6 @@
         private System.Windows.Forms.Label CH2vO;
         private System.Windows.Forms.Label CH2vS;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart2;
-        private System.Windows.Forms.ToolStripMenuItem terminalToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.CheckBox CH2onOFF;
         private System.Windows.Forms.Panel panel3;

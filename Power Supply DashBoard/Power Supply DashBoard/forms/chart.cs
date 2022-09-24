@@ -18,8 +18,7 @@ namespace Power_Supply_DashBoard
         public static AutoResetEvent resetEvent = new AutoResetEvent(false);
         int x;
         int GridlinesOffset = 0;
-        private static string path;
-        //SaveFileDialog saveFileDialog1 = new SaveFileDialog();
+        private static string path;       
         Thread dataloggingThread;
       
         public chart()
@@ -37,16 +36,11 @@ namespace Power_Supply_DashBoard
                     chart1.Series["CH2V"].Points.AddY(0);
                     Debug.WriteLine(i + "i");
                 }//chart y`y axis setup
-                Debug.WriteLine("hello world from chart");
-
-            //saveFileDialog1.Filter = "coma separated values|*.csv";
-            //saveFileDialog1.Title = "path to dataloging file";
-         
+                Debug.WriteLine("hello world from chart");         
         }
+
         private void chart_Load(object sender, EventArgs e)
         {
-             //path = Properties.Settings.Default.DataPath;
-
             string csvPath = Properties.Settings.Default.DataPath + "\\CSV\\";
             if (!Directory.Exists(csvPath))
             {
@@ -57,11 +51,11 @@ namespace Power_Supply_DashBoard
             Debug.WriteLine(date);
 
             path = csvPath + date + "csv";
-
             Debug.WriteLine(path);
         }
 
         #region EnabledSeries
+
         private void CheckBox5_CheckedChanged(object sender, EventArgs e)
         {
             chart1.Series["CH1V"].Enabled = ch1vE.Checked;
@@ -79,7 +73,6 @@ namespace Power_Supply_DashBoard
             chart1.Series["CH2A"].Enabled = CH12vE.Checked;
         }
         #endregion
-
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
@@ -103,17 +96,6 @@ namespace Power_Supply_DashBoard
 
 
         }
-
-        private void SaveFile_Click(object sender, EventArgs e)
-        {
-            //saveFileDialog1.ShowDialog();
-            //path = saveFileDialog1.FileName;
-            pathTextbox.Text = path;
-            //datalogingThread.IsBackground = true;
-            //datalogingThread.Start();
-        }
-
-        
 
         private void Start_Click(object sender, EventArgs e)
         {
@@ -250,7 +232,5 @@ namespace Power_Supply_DashBoard
                 chart1.SaveImage(imgpath, ChartImageFormat.Jpeg);
             }
         }
-
-        
     }
 }

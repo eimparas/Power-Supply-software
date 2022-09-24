@@ -39,8 +39,6 @@
             this.DataLogBox = new System.Windows.Forms.GroupBox();
             this.stop = new System.Windows.Forms.Button();
             this.start = new System.Windows.Forms.Button();
-            this.SaveFile = new System.Windows.Forms.Button();
-            this.pathTextbox = new System.Windows.Forms.TextBox();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.CH2Aout = new System.Windows.Forms.CheckBox();
             this.CH2Aset = new System.Windows.Forms.CheckBox();
@@ -118,20 +116,18 @@
             this.DataLogBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.DataLogBox.Controls.Add(this.stop);
             this.DataLogBox.Controls.Add(this.start);
-            this.DataLogBox.Controls.Add(this.SaveFile);
-            this.DataLogBox.Controls.Add(this.pathTextbox);
             this.DataLogBox.Controls.Add(this.groupBox10);
             this.DataLogBox.Controls.Add(this.groupBox9);
-            this.DataLogBox.Location = new System.Drawing.Point(914, 194);
+            this.DataLogBox.Location = new System.Drawing.Point(914, 226);
             this.DataLogBox.Name = "DataLogBox";
-            this.DataLogBox.Size = new System.Drawing.Size(197, 244);
+            this.DataLogBox.Size = new System.Drawing.Size(197, 212);
             this.DataLogBox.TabIndex = 11;
             this.DataLogBox.TabStop = false;
             this.DataLogBox.Text = "Dataloging";
             // 
             // stop
             // 
-            this.stop.Location = new System.Drawing.Point(132, 77);
+            this.stop.Location = new System.Drawing.Point(142, 182);
             this.stop.Name = "stop";
             this.stop.Size = new System.Drawing.Size(37, 23);
             this.stop.TabIndex = 7;
@@ -141,30 +137,13 @@
             // 
             // start
             // 
-            this.start.Location = new System.Drawing.Point(89, 77);
+            this.start.Location = new System.Drawing.Point(99, 182);
             this.start.Name = "start";
             this.start.Size = new System.Drawing.Size(37, 23);
             this.start.TabIndex = 6;
             this.start.Text = "start";
             this.start.UseVisualStyleBackColor = true;
             this.start.Click += new System.EventHandler(this.Start_Click);
-            // 
-            // SaveFile
-            // 
-            this.SaveFile.Image = global::Power_Supply_DashBoard.Properties.Resources.save;
-            this.SaveFile.Location = new System.Drawing.Point(151, 13);
-            this.SaveFile.Name = "SaveFile";
-            this.SaveFile.Size = new System.Drawing.Size(40, 34);
-            this.SaveFile.TabIndex = 5;
-            this.SaveFile.UseVisualStyleBackColor = true;
-            this.SaveFile.Click += new System.EventHandler(this.SaveFile_Click);
-            // 
-            // pathTextbox
-            // 
-            this.pathTextbox.Location = new System.Drawing.Point(1, 21);
-            this.pathTextbox.Name = "pathTextbox";
-            this.pathTextbox.Size = new System.Drawing.Size(144, 20);
-            this.pathTextbox.TabIndex = 4;
             // 
             // groupBox10
             // 
@@ -174,7 +153,7 @@
             this.groupBox10.Controls.Add(this.CH2Aset);
             this.groupBox10.Controls.Add(this.CH2Vout);
             this.groupBox10.Controls.Add(this.CH2Vset);
-            this.groupBox10.Location = new System.Drawing.Point(12, 138);
+            this.groupBox10.Location = new System.Drawing.Point(7, 110);
             this.groupBox10.Name = "groupBox10";
             this.groupBox10.Size = new System.Drawing.Size(71, 95);
             this.groupBox10.TabIndex = 3;
@@ -241,7 +220,7 @@
             this.groupBox9.Controls.Add(this.CH1Aset);
             this.groupBox9.Controls.Add(this.CH1Vset);
             this.groupBox9.Controls.Add(this.CH1Vout);
-            this.groupBox9.Location = new System.Drawing.Point(12, 47);
+            this.groupBox9.Location = new System.Drawing.Point(7, 19);
             this.groupBox9.Name = "groupBox9";
             this.groupBox9.Size = new System.Drawing.Size(71, 90);
             this.groupBox9.TabIndex = 2;
@@ -311,7 +290,7 @@
             this.Chart_ctrl_gbox.Controls.Add(this.ch1vE);
             this.Chart_ctrl_gbox.Location = new System.Drawing.Point(914, 10);
             this.Chart_ctrl_gbox.Name = "Chart_ctrl_gbox";
-            this.Chart_ctrl_gbox.Size = new System.Drawing.Size(196, 184);
+            this.Chart_ctrl_gbox.Size = new System.Drawing.Size(196, 114);
             this.Chart_ctrl_gbox.TabIndex = 12;
             this.Chart_ctrl_gbox.TabStop = false;
             this.Chart_ctrl_gbox.Text = "Chart control";
@@ -398,7 +377,6 @@
             this.Load += new System.EventHandler(this.chart_Load);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.DataLogBox.ResumeLayout(false);
-            this.DataLogBox.PerformLayout();
             this.groupBox10.ResumeLayout(false);
             this.groupBox10.PerformLayout();
             this.groupBox9.ResumeLayout(false);
@@ -413,8 +391,6 @@
 
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.GroupBox DataLogBox;
-        private System.Windows.Forms.Button SaveFile;
-        private System.Windows.Forms.TextBox pathTextbox;
         private System.Windows.Forms.GroupBox groupBox10;
         private System.Windows.Forms.CheckBox CH2Aout;
         private System.Windows.Forms.CheckBox CH2Aset;

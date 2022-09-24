@@ -81,12 +81,6 @@
     <Compile Include="forms\SocketManagement.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="forms\SCPI terminal.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="forms\SCPI terminal.Designer.cs">
-      <DependentUpon>SCPI terminal.cs</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="forms\About.resx">
       <DependentUpon>About.cs</DependentUpon>
     </EmbeddedResource>
@@ -112,9 +106,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="forms\SCPI terminal.resx">
-      <DependentUpon>SCPI terminal.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

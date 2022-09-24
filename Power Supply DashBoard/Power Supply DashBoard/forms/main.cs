@@ -45,6 +45,8 @@ namespace Power_Supply_DashBoard
         public string DatalogPath = "";
         double powerCH2 = 0.0;
         string idn = "";
+        string _DocumentLocation = "";
+        string _ourDir;
 
         Thread t;
         public main()
@@ -61,6 +63,7 @@ namespace Power_Supply_DashBoard
                 chartSeries.Series["Voltage"].Points.AddY(0);
                 chartSeries.Series["current"].Points.AddY(0);
             }//chart Y axis setup
+
             tabControl1.Appearance = TabAppearance.FlatButtons;
             tabControl1.ItemSize = new Size(0, 1);
             tabControl1.SizeMode = TabSizeMode.Fixed;
@@ -375,9 +378,22 @@ namespace Power_Supply_DashBoard
                 }
             }));
             t.Start();
-
+            #endregion
         }
-        #endregion
+
+
+        private void main_Load(object sender, EventArgs e)
+        {
+            _DocumentLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);//find docs location
+            _ourDir = _DocumentLocation + "\\PSU Dashboard";
+            Debug.WriteLine(_ourDir);
+            if (!Directory.Exists(_ourDir))
+            {
+                Directory.CreateDirectory(_ourDir);
+            }//Create folder Structure
+            Properties.Settings.Default.DataPath= _ourDir;
+            Properties.Settings.Default.Save();//Save it to App Setings.
+        }
 
         //########################################
         //Instrument Memories control functions.
@@ -385,25 +401,24 @@ namespace Power_Supply_DashBoard
         #region Memories
         private void M1_Click(object sender, EventArgs e)
         {
-            if (mem_save_check.Checked == true)
-            {
-                var mes = MessageBox.Show("are you sure that you want to save?", "Warning", MessageBoxButtons.OKCancel);
-                string message = Convert.ToString(mes);
-                if (message == "OK")
-                {
-                    Debug.WriteLine("save current setings to psu memory ");
-                }
-                mem_save_check.Checked = false;
-            }
-            else
-            {
-                Debug.WriteLine("send memory to psu");
-            }
+            //Code For Mem1
         }
 
         private void M2_Click(object sender, EventArgs e)
         {
-            tabControl1.SelectedIndex = 1;
+            //code For Mem2
+        }
+        private void M3_Click(object sender, EventArgs e)
+        {
+            //code For Mem3
+        }
+        private void M4_Click(object sender, EventArgs e)
+        {
+            //code For Mem4
+        }
+        private void M5_Click(object sender, EventArgs e)
+        {
+            //code For Mem5
         }
         #endregion
 
@@ -599,12 +614,7 @@ namespace Power_Supply_DashBoard
         //########################################
         //ToolStrip Items "logic" functions.
         //########################################
-        # region ToolStrip Items "logic" functions.
-        private void terminalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SCPI_terminal SCPI_TER = new SCPI_terminal();
-            SCPI_TER.Show();
-        }
+        # region ToolStrip Items "logic" functions.        
         private void NetworkSetingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             networksetup netset = new networksetup();
@@ -664,17 +674,7 @@ namespace Power_Supply_DashBoard
         {
             Debug.WriteLine("closing");
             t.Abort();
-        }
-        private void M5_Click(object sender, EventArgs e)
-        {
-            tabControl1.TabIndex = 1;
-        }
-
-        private void main_Load(object sender, EventArgs e)
-        {
-
-        }
-
+        }     
         private void Chart1Save_Click(object sender, EventArgs e)
         {
             string imagePath = Properties.Settings.Default.DataPath + "\\Images\\";
@@ -693,8 +693,26 @@ namespace Power_Supply_DashBoard
             {
                 chart1.SaveImage(path, ChartImageFormat.Jpeg);
             }
+        }
 
+        private void Chart2Save_Click(object sender, EventArgs e)
+        {
+            string imagePath = Properties.Settings.Default.DataPath + "\\Images\\";
+            if (!Directory.Exists(imagePath))
+            {
+                Directory.CreateDirectory(imagePath);
+            }
+            Debug.WriteLine(imagePath);
+            string date = DateTime.Now.ToString(new CultureInfo("de-DE")).Replace(":", ".") + ".";
+            Debug.WriteLine(date);
+
+            string path = imagePath + date + "jpeg";
+
+            Debug.WriteLine(path);
+            if (path != null)
+            {
+                chart2.SaveImage(path, ChartImageFormat.Jpeg);
+            }
         }
     }
-
 }

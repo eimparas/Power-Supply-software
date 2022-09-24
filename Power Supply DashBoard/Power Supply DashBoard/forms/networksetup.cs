@@ -16,41 +16,22 @@ namespace Power_Supply_DashBoard
     public partial class networksetup : Form
     {
         FolderBrowserDialog save = new FolderBrowserDialog();
-
         string _DocumentLocation = "";
         string _ourDir;
-
         public networksetup()
         {
-            InitializeComponent();
-            //save.Title = "path to dataloging Directory";
-            //save.Filter = "Directory | directory";
-           
+            InitializeComponent();            
         }
 
         private void networksetup_Load(object sender, EventArgs e)
         {
-            _DocumentLocation = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-             
-            _ourDir = _DocumentLocation + "\\PSU Dashboard";
-            Debug.WriteLine(_ourDir);
-            if (!Directory.Exists(_ourDir))
-            {
-                Directory.CreateDirectory(_ourDir);
-            }//check to see if the Directory used by the app is created in the system , if not creates it. 
+            _ourDir = Properties.Settings.Default.DataPath;//retrive the lastUsed Path
             save.SelectedPath = _ourDir;//set the folderPicker StartPoint
-
             ip1.Text = Convert.ToString(Properties.Settings.Default.IP1);
             ip2.Text = Convert.ToString(Properties.Settings.Default.IP2);
             ip3.Text = Convert.ToString(Properties.Settings.Default.IP3);
             ip4.Text = Convert.ToString(Properties.Settings.Default.IP4);//retrive the lastUsed IP
-
-            SaveTxtBox.Text = Properties.Settings.Default.DataPath;//retrive the lastUsed Path
-
-
-            //Properties.Settings.Default.DataPath = _ourDir;//save the app's workdir to the config 
-            //Properties.Settings.Default.Save();//Save the config
-
+            SaveTxtBox.Text = _ourDir;
         }
 
         private void key(object sender, KeyPressEventArgs e)
@@ -59,8 +40,7 @@ namespace Power_Supply_DashBoard
             {
                 Debug.WriteLine("ok");
                 SendKeys.SendWait("{TAB}");
-            }
-            
+            }            
         }
 
         private void Cancel_Click(object sender, EventArgs e)
@@ -124,12 +104,8 @@ namespace Power_Supply_DashBoard
             if (result == DialogResult.OK)
             {
                 _ourDir = save.SelectedPath;
-                Properties.Settings.Default.DataPath = _ourDir;//save the app's workdir to the config 
-                                                               
-                //SaveTxtBox.Text = _ourDir;
-
+                Properties.Settings.Default.DataPath = _ourDir;//save the app's workdir to the config                 
                 save.SelectedPath = _ourDir;//set the folderPicker to the new  StartPoint
-
                 SaveTxtBox.Text = Properties.Settings.Default.DataPath;//Write the path to the textbox from the config
                 Properties.Settings.Default.Save();//Save the config
                 Debug.WriteLine(Properties.Settings.Default.DataPath);
