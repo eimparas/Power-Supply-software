@@ -63,9 +63,9 @@ namespace Power_Supply_DashBoard.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap save {
+        internal static System.Drawing.Bitmap Croped {
             get {
-                object obj = ResourceManager.GetObject("save", resourceCulture);
+                object obj = ResourceManager.GetObject("Croped", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

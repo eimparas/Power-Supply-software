@@ -16,7 +16,7 @@ namespace Power_Supply_DashBoard
     public partial class networksetup : Form
     {
         FolderBrowserDialog save = new FolderBrowserDialog();
-        string _DocumentLocation = "";
+        //string _DocumentLocation = "";
         string _ourDir;
         public networksetup()
         {

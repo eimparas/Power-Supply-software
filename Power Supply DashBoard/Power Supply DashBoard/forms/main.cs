@@ -26,12 +26,12 @@ namespace Power_Supply_DashBoard
         int GridlinesOffset = 0;
         int SeriesGridlinesOffset = 0;
         int ParallelGridlinesOffset = 0;
-        bool CH1onOfflg = false;
-        bool CH2onOfflg = false;
-        bool RS1state = true;
-        bool RS2state = true;
-        const int port = 5025;
-        byte[] bytes = new byte[1024];
+        //bool CH1onOfflg = false;
+        //bool CH2onOfflg = false;
+        //bool RS1state = true;
+        //bool RS2state = true;
+        //const int port = 5025;
+        //byte[] bytes = new byte[1024];
         public static SocketManagement _SCPI;
         public static double voltageOutCH2 = 0.0;
         public static double voltageCH2 = 0.0;
