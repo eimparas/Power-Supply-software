@@ -54,8 +54,8 @@ namespace Power_Supply_DashBoard
         }
         void Connect()
         {
-            string _ip = ip1.Text + '.' + ip2.Text+'.'+ ip3.Text+ip4.Text;
-
+            string _ip = ip1.Text + '.' + ip2.Text+'.'+ ip3.Text+ '.' + ip4.Text;
+            Debug.WriteLine(_ip);
             Properties.Settings.Default.Hostname = _ip;
             Properties.Settings.Default.IP1 = Convert.ToInt16(ip1.Text);
             Properties.Settings.Default.IP2 = Convert.ToInt16(ip2.Text);
@@ -66,8 +66,8 @@ namespace Power_Supply_DashBoard
             Properties.Settings.Default.Save();
             try
             {
-                //main._SCPI = new SocketManagement(_ip, 5025);
-                //main._SCPI.connect();
+                main._SCPI = new SocketManagement(_ip, 5025);
+                main._SCPI.connect();
             }
             catch (Exception ex)
             {
